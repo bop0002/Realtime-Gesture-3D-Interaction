@@ -17,13 +17,13 @@ serverAddressPort = ("127.0.0.1",5025)
 while True:
 
     success,img = cam.read()
+    if success:
+        img = cv2.flip(img, 1)
+    hands,img = detector.findHands(img,flipType=False)
 
-    hands,img = detector.findHands(img)
-    data = []
-    
     if hands:
         hand = hands[0]
-
+        handType = hand['type']
         lmList = hand['lmList']
         for lm in lmList:
             data.extend([lm[0],height - lm[1],lm[2]])
@@ -31,7 +31,7 @@ while True:
         sock.sendto(str.encode(str(data)),serverAddressPort)
     cv2.imshow("Image",img)
 
-    if(cv2.waitKey(1) & 0xFF ==ord('q')):
+    if(cv2.waitKey(1) & 0xFF == ord('q')):
         break
 cam.release()
 cv2.destroyAllWindows()
