@@ -13,7 +13,7 @@ CSV_PATH = "models/gesture_classification/gesture_classification.csv"
 LABEL_PATH = "models/gesture_classification/gesture_classification_label.csv"
 MODEL_PATH = "models/gesture_classification/gesture_classification.tflite"
 
-VALID_CLASSES = [0, 1, 2]
+VALID_CLASSES = [0, 1, 2, 3, 4, 5]
 
 
 def count_samples():
@@ -58,7 +58,7 @@ def logging_csv(number, landmark_list):
         writer.writerow([number, *landmark_list])
 
 
-def draw_info(frame, mode, current_label, gesture_name, counts, model_loaded,fps):
+def draw_info(frame, mode, current_label, gesture_name, counts, model_loaded, fps):
     mode_text = "COLLECT MODE" if mode == 1 else "PREDICT MODE"
     cv2.putText(
         frame,
@@ -132,22 +132,54 @@ def draw_info(frame, mode, current_label, gesture_name, counts, model_loaded,fps
 
     cv2.putText(
         frame,
-        "k: collect mode | p: predict mode | 0/1/2: save label | esc: exit",
+        f"OK (3): {counts.get(3, 0)}",
+        (10, 250),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"Peace (4): {counts.get(4, 0)}",
+        (10, 280),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"ThumbsUp (5): {counts.get(5, 0)}",
+        (10, 310),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"FPS: {fps}",
+        (10, 340),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0, 255, 255),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        "k: collect mode | p: predict mode | 0/1/2/3/4/5: save label | esc: exit",
         (10, 460),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.55,
         (200, 200, 200),
         1
     )
-    cv2.putText(
-        frame,
-        f"FPS: {fps}",
-        (10, 260),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
-        (0, 255, 255),
-        2
-    )
+
 
 def main():
     cap = cv2.VideoCapture(0)
@@ -192,7 +224,7 @@ def main():
             mode = 0
 
         # Gán nhãn khi thu dữ liệu
-        if key in [ord("0"), ord("1"), ord("2")]:
+        if key in [ord("0"), ord("1"), ord("2"),ord("3"), ord("4"), ord("5")]:
             current_label = int(chr(key))
 
         hands, frame = detector.findHands(frame)
