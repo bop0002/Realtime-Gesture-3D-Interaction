@@ -1,0 +1,12 @@
+opencv-python==4.8.0.76
+mediapipe==0.10.11
+cvzone==1.6.1
+tensorflow==2.15.0
+keras==2.15.0
+pandas==2.3.3
+numpy==1.26.4
+scikit-learn==1.7.2
+matplotlib==3.10.8
+seaborn==0.13.2
+jupyter==1.0.0
+notebook==7.5.5
