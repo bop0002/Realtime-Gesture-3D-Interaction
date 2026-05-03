@@ -45,12 +45,19 @@ public class HandTracking : MonoBehaviour
             
             var tmp = new Vector3(x,y,z);
 
-            Debug.Log($"X:{tmp.x}, Y: {tmp.y},Z:{tmp.z}" );
+            // Debug.Log($"X:{tmp.x}, Y: {tmp.y},Z:{tmp.z}" );
 
             Points[i].localPosition = tmp;
         }
+
         
-        HandleHandModel();
+        if (points.Length > handPoints * 3)
+        {
+            string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
+            Debug.Log($"Detected Gesture: {gesture}");
+        }
+        
+        //HandleHandModel();
 
     }
 
