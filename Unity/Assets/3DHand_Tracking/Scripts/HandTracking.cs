@@ -8,6 +8,10 @@ public class HandTracking : MonoBehaviour
     public Line[] Lines;
     public bool IsDebug;
     [SerializeField] private GameObject debugHand;
+    
+    // Biến lưu trữ cử chỉ nhận được từ Python
+    public string CurrentGesture { get; private set; } = "None";
+
     //[SerializeField] private GameObject handModel;
     private const int handPoints = 21;
     private (int startPoint,int endPoint)[] bones = new []
@@ -32,7 +36,7 @@ public class HandTracking : MonoBehaviour
         debugHand.SetActive(IsDebug);
 
         string data= udpReceive.data;
-        if(data == null || data[0]!='[') return;
+        if(string.IsNullOrEmpty(data) || data.Length < 2 || data[0]!='[') return;
         data = data.Remove(0,1);
         data = data.Remove(data.Length-1,1);
         string[] points = data.Split(',');
@@ -54,7 +58,12 @@ public class HandTracking : MonoBehaviour
         if (points.Length > handPoints * 3)
         {
             string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
-            Debug.Log($"Detected Gesture: {gesture}");
+            CurrentGesture = gesture; // Cập nhật biến
+            Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
+        }
+        else 
+        {
+            CurrentGesture = "None";
         }
         
         //HandleHandModel();

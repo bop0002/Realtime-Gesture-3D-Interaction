@@ -2,6 +2,7 @@ import os
 import cv2
 import csv
 import copy
+import socket
 import itertools
 import pandas as pd
 from collections import deque, Counter
@@ -124,6 +125,17 @@ def draw_info(frame, mode, current_label, gesture_name, dynamic_gesture_name, co
     cv2.putText(frame, "p: predict | k: col static | h: col dynamic | 0-9: label | esc: quit", (10, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (200, 200, 200), 1)
 
 
+def send_udp_data(sock, server_address, frame_shape, lm_list, gesture_name):
+    """Đóng gói dữ liệu tọa độ 3D và tên cử chỉ, sau đó gửi qua UDP đến Unity."""
+    height = frame_shape[0]
+    data = []
+    for lm in lm_list:
+        data.extend([lm[0], height - lm[1], lm[2]])
+    
+    data.append(gesture_name)
+    sock.sendto(str.encode(str(data)), server_address)
+
+
 def main():
     cap = cv2.VideoCapture(0)
     detector = HandDetector(maxHands=1)
@@ -174,6 +186,10 @@ def main():
     history_length = 32
     point_history = deque(maxlen=history_length)
     finger_gesture_history = deque(maxlen=history_length)
+
+    # Khởi tạo Socket UDP
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    serverAddressPort = ("127.0.0.1", 5026)
 
     while True:
         fps = fps_calc.get()
@@ -244,6 +260,9 @@ def main():
                     except ValueError:
                         # Model cũ chưa được cập nhật cho input size mới (64)
                         dynamic_gesture_name = "Model Cũ / Lỗi Size"
+            
+            send_udp_data(sock, serverAddressPort, frame.shape, lmList, gesture_name)
+
         else:
             point_history.append([0, 0])
 
