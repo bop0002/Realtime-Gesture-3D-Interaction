@@ -47,13 +47,15 @@ public class Grabbable : MonoBehaviour
         SetHighlight(false);
     }
 
-    public void Release()
+    public void Release(Vector3 throwVelocity = default)
     {
         if (!isGrabbed) return;
         isGrabbed = false;
         transform.SetParent(null, worldPositionStays: true);
         rb.isKinematic = false;
         rb.interpolation = savedInterpolation;
+        rb.linearVelocity = throwVelocity;
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void SetHighlight(bool on)

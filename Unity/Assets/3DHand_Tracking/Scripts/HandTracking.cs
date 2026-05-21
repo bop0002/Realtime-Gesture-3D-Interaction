@@ -69,12 +69,12 @@ public class HandTracking : MonoBehaviour
             string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
             if (IsIgnoredGesture(gesture))
             {
-                Debug.Log($"Ignored Gesture: {gesture} (keeping previous: {CurrentGesture})");
+                //Debug.Log($"Ignored Gesture: {gesture} (keeping previous: {CurrentGesture})");
             }
             else
             {
                 CurrentGesture = gesture; // Cập nhật biến
-                Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
+                //Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
             }
         }
         else
