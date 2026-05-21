@@ -40,6 +40,12 @@ public class HandGrabber : MonoBehaviour
     [Tooltip("Phải rời gesture grab liên tục bao lâu (giây) trước khi release. Tăng giá trị này để chống misclassification (ThumbsUp/OK/...) khi đang nắm.")]
     [SerializeField] private float releaseHoldTime = 0.5f;
 
+    [Header("Throw")]
+    [Tooltip("Số frame gần nhất dùng để tính velocity lúc release.")]
+    [SerializeField, Range(2, 30)] private int velocitySampleCount = 10;
+    [Tooltip("Hệ số nhân velocity khi throw. 1.0 = đúng tốc độ tay; >1 ném mạnh hơn; <1 nhẹ hơn.")]
+    [SerializeField, Range(0f, 5f)] private float throwMultiplier = 1.0f;
+
     [Header("Debug")]
     [SerializeField] private bool showGizmo = true;
     [SerializeField] private Color gizmoColor = new Color(0f, 1f, 1f, 0.35f);
@@ -50,6 +56,9 @@ public class HandGrabber : MonoBehaviour
     private float grabHeldFor;
     private float releaseHeldFor;
     private readonly HashSet<Grabbable> overlapBuffer = new HashSet<Grabbable>();
+
+    private struct PosSample { public Vector3 pos; public float time; }
+    private readonly Queue<PosSample> palmSamples = new Queue<PosSample>();
 
     private void Awake()
     {
@@ -64,6 +73,7 @@ public class HandGrabber : MonoBehaviour
         if (palmAnchorOverride == null && !HasValidPalmPoints()) return;
 
         UpdatePalmAnchor();
+        RecordPalmSample();
 
         string gesture = handTracking.CurrentGesture;
         bool wantGrab = !string.IsNullOrEmpty(gesture) &&
@@ -193,10 +203,33 @@ public class HandGrabber : MonoBehaviour
 
     private void ReleaseCurrent()
     {
-        currentGrab.Release();
+        Vector3 throwVelocity = ComputePalmVelocity() * throwMultiplier;
+        currentGrab.Release(throwVelocity);
         currentGrab = null;
         grabHeldFor = 0f;
         releaseHeldFor = 0f;
+        palmSamples.Clear();
+    }
+
+    private void RecordPalmSample()
+    {
+        palmSamples.Enqueue(new PosSample { pos = palmAnchor.position, time = Time.time });
+        while (palmSamples.Count > velocitySampleCount) palmSamples.Dequeue();
+    }
+
+    private Vector3 ComputePalmVelocity()
+    {
+        if (palmSamples.Count < 2) return Vector3.zero;
+        PosSample oldest = default, newest = default;
+        bool first = true;
+        foreach (var s in palmSamples)
+        {
+            if (first) { oldest = s; first = false; }
+            newest = s;
+        }
+        float dt = newest.time - oldest.time;
+        if (dt < 0.0001f) return Vector3.zero;
+        return (newest.pos - oldest.pos) / dt;
     }
 
     private void OnDrawGizmos()
