@@ -8,7 +8,15 @@ public class HandTracking : MonoBehaviour
     public Line[] Lines;
     public bool IsDebug;
     [SerializeField] private GameObject debugHand;
-    
+
+    [Header("World Scale")]
+    [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Càng nhỏ thì bàn tay càng to. 100 = mặc định cũ, 50 = gấp đôi.")]
+    [SerializeField] private float coordinateDivisor = 75f;
+
+    [Header("Gesture Filter")]
+    [Tooltip("Các gesture cần bỏ qua hoàn toàn — khi Python gửi 1 gesture này, CurrentGesture sẽ giữ nguyên giá trị trước đó (xem như không nhận gesture mới). Hữu ích khi model nhầm Close ↔ ThumbsUp/OK.")]
+    [SerializeField] private string[] ignoredGestures = new[] { "ThumbsUp" };
+
     // Biến lưu trữ cử chỉ nhận được từ Python
     public string CurrentGesture { get; private set; } = "None";
 
@@ -43,9 +51,10 @@ public class HandTracking : MonoBehaviour
 
         for(int i = 0;i<handPoints;i++)
         {
-            var x = 7 - float.Parse(points[i*3])/100f; //Tinh toan sau
-            var y = float.Parse(points[i*3+1])/100f;   
-            var z = float.Parse(points[i*3+2])/100f;
+            var divisor = coordinateDivisor > 0.0001f ? coordinateDivisor : 100f;
+            var x = 7 - float.Parse(points[i*3])/divisor; //Tinh toan sau
+            var y = float.Parse(points[i*3+1])/divisor;
+            var z = float.Parse(points[i*3+2])/divisor;
             
             var tmp = new Vector3(x,y,z);
 
@@ -58,10 +67,17 @@ public class HandTracking : MonoBehaviour
         if (points.Length > handPoints * 3)
         {
             string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
-            CurrentGesture = gesture; // Cập nhật biến
-            Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
+            if (IsIgnoredGesture(gesture))
+            {
+                Debug.Log($"Ignored Gesture: {gesture} (keeping previous: {CurrentGesture})");
+            }
+            else
+            {
+                CurrentGesture = gesture; // Cập nhật biến
+                Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
+            }
         }
-        else 
+        else
         {
             CurrentGesture = "None";
         }
@@ -75,5 +91,16 @@ public class HandTracking : MonoBehaviour
     {
         //handModel.transform.position =  Points[0].transform.localPosition;
     }
-    
+
+    private bool IsIgnoredGesture(string gesture)
+    {
+        if (string.IsNullOrEmpty(gesture) || ignoredGestures == null) return false;
+        for (int i = 0; i < ignoredGestures.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(ignoredGestures[i]) &&
+                gesture.Equals(ignoredGestures[i], System.StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
 }
