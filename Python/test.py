@@ -128,11 +128,16 @@ def draw_info(frame, mode, current_label, gesture_name, dynamic_gesture_name, co
 def send_udp_data(sock, server_address, frame_shape, lm_list, gesture_name):
     """Đóng gói dữ liệu tọa độ 3D và tên cử chỉ, sau đó gửi qua UDP đến Unity."""
     height = frame_shape[0]
+    width = frame_shape[1]
     data = []
     for lm in lm_list:
         data.extend([lm[0], height - lm[1], lm[2]])
-    
+
     data.append(gesture_name)
+    # Gửi kèm kích thước frame THẬT để consumer normalize đúng (FruitNinja).
+    # Append sau gesture nên backward-compatible với 3DHandModel (chỉ đọc tới index gesture).
+    data.append(width)
+    data.append(height)
     sock.sendto(str.encode(str(data)), server_address)
 
 
