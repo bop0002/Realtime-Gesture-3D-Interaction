@@ -1,0 +1,52 @@
+\documentclass[../BTL.tex]{subfiles}
+\begin{document}
+
+\section*{Tổng quan chương}
+Chương 1 giới thiệu tổng quan về đề tài nghiên cứu và xây dựng hệ thống tương tác người - máy bằng cử chỉ tay thời gian thực. Nội dung chương bao gồm bốn phần chính: (i) Đặt vấn đề nghiên cứu, phân tích tính cấp thiết của tương tác tự nhiên trong không gian ba chiều và các hạn chế của thiết bị ngoại vi truyền thống; (ii) Xác định mục tiêu nghiên cứu và phạm vi ứng dụng của đề tài; (iii) Đề xuất định hướng giải pháp kỹ thuật dựa trên công nghệ học máy kết hợp mô phỏng 3D; và (iv) Trình bày bố cục chung của báo cáo bài tập lớn.
+
+\section{Đặt vấn đề}
+\label{section:1.1}
+Tương tác người - máy (HCI - Human-Computer Interaction) đã trải qua nhiều giai đoạn phát triển từ các giao diện dòng lệnh (CLI), giao diện người dùng đồ họa 2D (GUI) đến các giao diện người dùng tự nhiên (NUI - Natural User Interface). Trong các môi trường làm việc văn phòng truyền thống, chuột và bàn phím là các thiết bị nhập liệu tối ưu. Tuy nhiên, sự bùng nổ của các ứng dụng đồ họa 3D phức tạp, các môi trường thực tế ảo (VR), thực tế tăng cường (AR) và các trò chơi mô phỏng vật lý đã đòi hỏi một phương thức tương tác trực quan và tự nhiên hơn. Các thiết bị 2D truyền thống bộc lộ những hạn chế lớn về số bậc tự do nhập liệu, khiến người dùng gặp khó khăn trong việc điều khiển, định vị và thao tác trực tiếp với các đối tượng trong không gian ba chiều.
+
+Để giải quyết vấn đề này, việc nghiên cứu các giao diện người dùng tự nhiên dựa trên cử chỉ bàn tay (hand gesture interaction) là hướng đi đầy triển vọng \cite{ravikiran2013hand}. Bàn tay con người với cấu trúc giải phẫu linh hoạt gồm 27 xương và nhiều khớp tự do có thể tạo ra vô số tư thế và chuyển động biểu cảm. Tương tác cử chỉ tay cho phép người dùng điều khiển hệ thống một cách trực tiếp mà không cần tiếp xúc vật lý, mang lại trải nghiệm nhập liệu tự nhiên và trực quan.
+
+Mặc dù các cảm biến chiều sâu chuyên dụng như Leap Motion, Kinect hay các thiết bị găng tay dữ liệu (data gloves) có thể cung cấp tọa độ bàn tay với độ chính xác cao, nhưng chi phí trang bị đắt đỏ và tính tương thích phần cứng hạn chế đã ngăn cản sự phổ biến của chúng đến người dùng phổ thông. Vì vậy, bài toán đặt ra là làm thế nào để xây dựng một hệ thống nhận dạng cử chỉ bàn tay thời gian thực chỉ sử dụng camera RGB (webcam) thông thường có sẵn trên hầu hết các máy tính hiện nay. Giải pháp này đòi hỏi sự kết hợp mạnh mẽ giữa các công nghệ xử lý ảnh trực tuyến, trích xuất điểm mốc bàn tay dựa trên mô hình học sâu và phân loại cử chỉ bằng các thuật toán học máy tối ưu nhằm đạt được tốc độ xử lý cao, độ trễ thấp và độ chính xác phù hợp trong điều kiện phần cứng máy tính cá nhân phổ thông.
+
+\section{Mục tiêu và phạm vi đề tài}
+\label{section:1.2}
+Đề tài hướng tới việc nghiên cứu, thiết kế và phát triển một hệ thống tương tác người - máy bằng cử chỉ tay thời gian thực, kết hợp giữa thuật toán học máy phân loại cử chỉ trên luồng ảnh webcam và môi trường mô phỏng đồ họa 3D tương tác.
+
+Các mục tiêu cụ thể được đặt ra bao gồm:
+\begin{enumerate}
+    \item Nghiên cứu phương pháp trích xuất đặc trưng hình học bàn tay thời gian thực, ứng dụng framework MediaPipe Hands của Google để dò tìm bàn tay và định vị chính xác tọa độ không gian 3D của 21 điểm khớp mốc chính.
+    \item Xây dựng thuật toán chuẩn hóa dữ liệu đầu vào để loại bỏ các ảnh hưởng do khoảng cách bàn tay tới camera, vị trí của bàn tay trong khung hình, đảm bảo tính bất biến về vị trí và tỉ lệ của đặc trưng hình học.
+    \item Thiết kế và huấn luyện hai mô hình phân loại cử chỉ: (i) bộ phân loại cử chỉ tĩnh (6 lớp cử chỉ chính bao gồm Open, Close, Pointer, OK, Peace, ThumbsUp) bằng mạng nơ-ron truyền thẳng (MLP) tối ưu hóa sang định dạng TensorFlow Lite, và (ii) bộ phân loại cử chỉ động (10 lớp cử chỉ di chuyển bao gồm các động tác vuốt Swipe Left/Right/Up/Down, vẽ hình tròn Circle, tam giác Triangle, ký tự Z/S, vô cực Infinity) dựa trên chuỗi thời gian quỹ đạo của ngón trỏ.
+    \item Lập trình tích hợp tương tác trong môi trường 3D bằng engine Unity thông qua kết nối mạng truyền thông điệp UDP cục bộ độ trễ thấp để điều khiển hai ứng dụng thực tế: (i) ứng dụng mô phỏng xương tay ảo \texttt{3DHandModel} tích hợp cơ chế cầm nắm, giữ và ném vật lý dựa trên các cử chỉ nhận dạng tương ứng; và (ii) ứng dụng game tương tác \texttt{FruitNinja} điều khiển lưỡi dao chém hoa quả bằng ngón trỏ, tích hợp giải thuật lọc nhiễu thích nghi One Euro Filter để loại bỏ rung giật tọa độ chuyển động tay.
+\end{enumerate}
+
+Phạm vi nghiên cứu của đề tài tập trung vào việc xử lý chuyển động bàn tay đơn lẻ từ một luồng camera RGB duy nhất đặt trước người dùng. Nghiên cứu chủ yếu giải quyết các vấn đề kỹ thuật liên quan đến độ ổn định của dữ liệu chuyển động, cải thiện tốc độ xử lý của pipeline AI nhằm hướng tới tần số xử lý khoảng trên 30 khung hình/giây (FPS) và giảm độ trễ phản hồi hệ thống để tạo cảm giác tương tác bám đuổi tốt hơn.
+
+\section{Định hướng giải pháp}
+\label{section:1.3}
+Giải pháp kỹ thuật được đề xuất sử dụng kiến trúc phân tách Client-Server chạy song song trên cùng một máy tính:
+\begin{enumerate}
+    \item \textbf{Phía Server (Python AI Backend):} Nhận nhiệm vụ thu nhận hình ảnh từ webcam ở tần số cao bằng thư viện OpenCV, chạy mô hình học sâu MediaPipe để dò tìm và xuất ra danh sách 21 điểm mốc tọa độ 3D của bàn tay. Các tọa độ này được đưa qua bộ tiền xử lý chuẩn hóa đặc trưng. Server sử dụng các mô hình TensorFlow Lite (.tflite) để thực hiện suy luận cử chỉ tĩnh và cử chỉ động ở phía Python. Trong phiên bản hiện tại, dữ liệu truyền sang Unity qua UDP gồm tọa độ 21 điểm khớp tay, nhãn cử chỉ tĩnh và kích thước khung hình camera.
+    \item \textbf{Phía Client (Unity 3D Frontend):} Lập trình một luồng nhận dữ liệu UDP độc lập để liên tục cập nhật vị trí cho mô hình bàn tay ảo. Tọa độ khớp tay được lọc nhiễu tần số cao thông qua thuật toán One Euro Filter trước khi ánh xạ vào hệ xương mô phỏng hoặc hệ tọa độ màn hình game. Dựa trên trạng thái cử chỉ nhận được (ví dụ nhãn "Close" biểu thị hành động nắm tay, nhãn "Pointer" biểu thị hành động chỉ ngón trỏ), hệ thống sẽ điều khiển logic cầm nắm vật thể 3D vật lý hoặc lưỡi dao chém quả.
+\end{enumerate}
+
+Định hướng giải pháp này giúp phân tách rõ ràng nhiệm vụ tính toán AI và kết xuất đồ họa, giải phóng tài nguyên cho hệ thống, đồng thời sử dụng kết nối UDP giúp giảm chi phí truyền nhận giữa Python và Unity trong thử nghiệm cục bộ.
+
+\section{Bố cục bài tập lớn}
+\label{section:1.4}
+Báo cáo bài tập lớn Thực tập cơ sở này được tổ chức thành 4 chương chính như sau:
+
+Chương 2 trình bày cơ sở lý thuyết liên quan đến hệ thống, bao gồm nguyên lý hoạt động của OpenCV trong xử lý ảnh số thời gian thực, kiến trúc trích xuất đặc trưng khớp tay của thư viện MediaPipe, phương pháp toán học chuẩn hóa tọa độ đặc trưng, lý thuyết mạng nơ-ron nhân tạo truyền thẳng (MLP) cho phân loại cử chỉ tĩnh và động, giao thức truyền thông UDP thời gian thực và giải thuật lọc thích nghi chống rung One Euro Filter.
+
+Chương 3 tập trung mô tả chi tiết thiết kế hệ thống, kiến trúc các module phần mềm, quá trình hiện thực hóa các lớp xử lý dữ liệu và thuật toán điều khiển trong Unity (bao gồm kịch bản đồng bộ xương tay ảo, cơ chế tương tác cầm nắm vật lý và lập trình trò chơi tương tác Fruit Ninja). Đồng thời, chương này trình bày các kết quả đánh giá thực nghiệm về độ chính xác phân loại cử chỉ, tốc độ xử lý FPS và độ trễ phản hồi của hệ thống.
+
+Chương 4 đưa ra những đánh giá tổng kết về các đóng góp chính của đề tài, phân tích những hạn chế kỹ thuật hiện tại và đề xuất định hướng phát triển, cải tiến hệ thống trong tương lai nhằm nâng cao độ chính xác nhận dạng và mở rộng không gian tương tác.
+
+\section*{Kết chương}
+Chương 1 đã phác thảo bức tranh tổng quan về đề tài tương tác cử chỉ bàn tay 3D thời gian thực, làm rõ tính cấp thiết, mục tiêu nghiên cứu và giải pháp thiết kế hệ thống Client-Server phân tán. Để có cơ sở lý thuyết vững chắc cho việc cài đặt và hiện thực hóa các module xử lý này, Chương 2 tiếp theo sẽ đi sâu nghiên cứu các thuật toán trích xuất đặc trưng hình học, nhận dạng cử chỉ học máy và bộ lọc chống rung thích nghi.
+
+\end{document}

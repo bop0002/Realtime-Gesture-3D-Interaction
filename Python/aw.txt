@@ -1,2 +1,0 @@
-.\venv\Scripts\activate
-D:\Realtime-Gesture-3D-Interaction\Python\.venv\Scripts\activate
