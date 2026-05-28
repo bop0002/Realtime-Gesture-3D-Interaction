@@ -8,6 +8,7 @@ import pandas as pd
 from collections import deque, Counter
 
 from utils.cvfpscalc import CvFpsCalc
+from utils.rule_gesture import recognize_gesture as rule_recognize_gesture
 from cvzone.HandTrackingModule import HandDetector
 from models.gesture_classification.gesture_classification import GestureClassifier
 from models.dynamic_gesture.dynamic_gesture import DynamicClassifier
@@ -99,34 +100,41 @@ def draw_point_history(image, point_history):
     return image
 
 
-def draw_info(frame, mode, current_label, gesture_name, dynamic_gesture_name, counts, dynamic_counts, model_loaded, dyn_model_loaded, fps):
+def draw_info(frame, mode, current_label, gesture_name, rule_gesture_name, dynamic_gesture_name, counts, dynamic_counts, model_loaded, dyn_model_loaded, fps):
     if mode == 1: mode_text = "COLLECT STATIC"
     elif mode == 2: mode_text = "COLLECT DYNAMIC"
     else: mode_text = "PREDICT MODE"
-        
+
     cv2.putText(frame, mode_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
     cv2.putText(frame, f"Label key: {current_label if current_label != -1 else 'None'}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-    cv2.putText(frame, f"Static Gesture: {gesture_name}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-    cv2.putText(frame, f"Dynamic Gesture: {dynamic_gesture_name}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 165, 255), 2)
+    cv2.putText(frame, f"Model Gesture: {gesture_name}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+    cv2.putText(frame, f"Rule  Gesture: {rule_gesture_name}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 200, 0), 2)
+    cv2.putText(frame, f"Dynamic Gesture: {dynamic_gesture_name}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 165, 255), 2)
 
     cv2.putText(frame, f"Models: Static={'OK' if model_loaded else 'NO'} | Dynamic={'OK' if dyn_model_loaded else 'NO'}",
-                (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+                (10, 180), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
     if mode == 1:
         # Show static counts
-        for i, c in enumerate(VALID_CLASSES[:10]): 
-             cv2.putText(frame, f"Class {i}: {counts.get(i, 0)}", (10, 180 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+        for i, c in enumerate(VALID_CLASSES[:10]):
+             cv2.putText(frame, f"Class {i}: {counts.get(i, 0)}", (10, 210 + i*22), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
     elif mode == 2:
         # Show dynamic counts
         for i in VALID_DYNAMIC_CLASSES:
-             cv2.putText(frame, f"Dyn Class {i}: {dynamic_counts.get(i, 0)}", (10, 180 + i*30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+             cv2.putText(frame, f"Dyn Class {i}: {dynamic_counts.get(i, 0)}", (10, 210 + i*22), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
 
-    cv2.putText(frame, f"FPS: {fps}", (10, 430), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-    cv2.putText(frame, "p: predict | k: col static | h: col dynamic | 0-9: label | esc: quit", (10, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (200, 200, 200), 1)
+    cv2.putText(frame, f"FPS: {fps}", (10, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+    cv2.putText(frame, "p: predict | k: col static | h: col dynamic | 0-9: label | esc: quit", (10, 475), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (200, 200, 200), 1)
 
 
-def send_udp_data(sock, server_address, frame_shape, lm_list, gesture_name):
-    """Đóng gói dữ liệu tọa độ 3D và tên cử chỉ, sau đó gửi qua UDP đến Unity."""
+def send_udp_data(sock, server_address, frame_shape, lm_list, gesture_name, rule_gesture_name):
+    """Đóng gói dữ liệu tọa độ 3D + gesture (model & rule) gửi qua UDP đến Unity.
+
+    Payload (list literal Python):
+        [x0,y0,z0, ..., x20,y20,z20, model_gesture, width, height, rule_gesture]
+    Backward-compatible: consumer cũ chỉ đọc tới gesture (index 63) hoặc tới
+    width/height (index 64,65) vẫn parse được; rule nằm sau cùng (index 66).
+    """
     height = frame_shape[0]
     width = frame_shape[1]
     data = []
@@ -134,10 +142,9 @@ def send_udp_data(sock, server_address, frame_shape, lm_list, gesture_name):
         data.extend([lm[0], height - lm[1], lm[2]])
 
     data.append(gesture_name)
-    # Gửi kèm kích thước frame THẬT để consumer normalize đúng (FruitNinja).
-    # Append sau gesture nên backward-compatible với 3DHandModel (chỉ đọc tới index gesture).
     data.append(width)
     data.append(height)
+    data.append(rule_gesture_name)
     sock.sendto(str.encode(str(data)), server_address)
 
 
@@ -214,6 +221,7 @@ def main():
 
         hands, frame = detector.findHands(frame)
         gesture_name = "None"
+        rule_gesture_name = "None"
         dynamic_gesture_name = "None"
         gesture_id = -1
 
@@ -223,6 +231,9 @@ def main():
             landmark_list = [[lm[0], lm[1]] for lm in lmList]
             pre_processed = pre_process_landmark(landmark_list)
 
+            # Rule-based gesture (chạy song song, dùng cho fallback & verify ở Unity)
+            rule_gesture_name = rule_recognize_gesture(landmark_list)
+
             # Predict static gesture (always needed to act as trigger)
             if model_loaded and gesture_classifier is not None:
                 try:
@@ -231,6 +242,9 @@ def main():
                         gesture_name = gesture_labels[gesture_id]
                 except Exception:
                     pass
+            else:
+                # Model chưa load -> fallback model_gesture = rule để Unity vẫn dùng được
+                gesture_name = rule_gesture_name
 
             # Update point history ONLY if gesture is Pointer (Assume Pointer is ID 2)
             if gesture_id == 2:
@@ -266,13 +280,13 @@ def main():
                         # Model cũ chưa được cập nhật cho input size mới (64)
                         dynamic_gesture_name = "Model Cũ / Lỗi Size"
             
-            send_udp_data(sock, serverAddressPort, frame.shape, lmList, gesture_name)
+            send_udp_data(sock, serverAddressPort, frame.shape, lmList, gesture_name, rule_gesture_name)
 
         else:
             point_history.append([0, 0])
 
         frame = draw_point_history(frame, point_history)
-        draw_info(frame, mode, current_label, gesture_name, dynamic_gesture_name, cached_static_counts, cached_dynamic_counts, model_loaded, dyn_model_loaded, fps)
+        draw_info(frame, mode, current_label, gesture_name, rule_gesture_name, dynamic_gesture_name, cached_static_counts, cached_dynamic_counts, model_loaded, dyn_model_loaded, fps)
 
         cv2.imshow("Gesture Recognition", frame)
 

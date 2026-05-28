@@ -14,10 +14,26 @@ public class HandTracking : MonoBehaviour
     [SerializeField] private float coordinateDivisor = 75f;
 
     [Header("Gesture Filter")]
-    [Tooltip("Các gesture cần bỏ qua hoàn toàn — khi Python gửi 1 gesture này, CurrentGesture sẽ giữ nguyên giá trị trước đó (xem như không nhận gesture mới). Hữu ích khi model nhầm Close ↔ ThumbsUp/OK.")]
+    [Tooltip("Các gesture cần bỏ qua hoàn toàn — khi Python gửi 1 gesture này, ModelGesture sẽ giữ nguyên giá trị trước đó (xem như không nhận gesture mới). Hữu ích khi model nhầm Close ↔ ThumbsUp/OK.")]
     [SerializeField] private string[] ignoredGestures = new[] { "ThumbsUp" };
 
-    // Biến lưu trữ cử chỉ nhận được từ Python
+    public enum GestureSource
+    {
+        Model,        // chỉ dùng output từ TFLite model (như trước)
+        Rule,         // chỉ dùng rule-based đếm ngón từ Python
+        EitherMatch,  // ưu tiên Model; nếu Model = None thì lấy Rule
+        BothMatch,    // chỉ cho gesture khi Model == Rule (chống false-positive)
+    }
+
+    [Header("Gesture Source")]
+    [Tooltip("Chọn nguồn gesture dùng cho CurrentGesture. BothMatch an toàn nhất cho các action quan trọng (grab/throw). Model giữ hành vi cũ.")]
+    [SerializeField] private GestureSource gestureSource = GestureSource.Model;
+
+    // Output từ TFLite model phía Python (đã qua ignoredGestures filter).
+    public string ModelGesture { get; private set; } = "None";
+    // Output rule-based đếm ngón (Open / Close / Pointer / Peace) — None nếu Python không gửi.
+    public string RuleGesture { get; private set; } = "None";
+    // Gesture cuối cùng theo gestureSource — các script khác (HandGrabber, GestureUIController) đọc trường này.
     public string CurrentGesture { get; private set; } = "None";
 
     //[SerializeField] private GameObject handModel;
@@ -63,27 +79,64 @@ public class HandTracking : MonoBehaviour
             Points[i].localPosition = tmp;
         }
 
-        
+
+        // Parse model gesture (index 63) — backward compatible với payload cũ
         if (points.Length > handPoints * 3)
         {
             string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
-            if (IsIgnoredGesture(gesture))
+            if (!IsIgnoredGesture(gesture))
             {
-                //Debug.Log($"Ignored Gesture: {gesture} (keeping previous: {CurrentGesture})");
-            }
-            else
-            {
-                CurrentGesture = gesture; // Cập nhật biến
-                //Debug.Log($"Detected Gesture: {gesture}"); // Ẩn bớt log cho đỡ rác console
+                ModelGesture = gesture; // chỉ update khi không nằm trong blacklist
             }
         }
         else
         {
-            CurrentGesture = "None";
+            ModelGesture = "None";
         }
-        
+
+        // Parse rule gesture (index 66 — sau model_gesture, width, height).
+        // Backward compatible: payload cũ không có thì RuleGesture = "None".
+        int ruleIdx = handPoints * 3 + 3;
+        if (points.Length > ruleIdx)
+        {
+            RuleGesture = points[ruleIdx].Trim(' ', '\'', '"');
+        }
+        else
+        {
+            RuleGesture = "None";
+        }
+
+        CurrentGesture = ResolveCurrentGesture();
+
         //HandleHandModel();
 
+    }
+
+    private string ResolveCurrentGesture()
+    {
+        bool modelValid = !string.IsNullOrEmpty(ModelGesture) && ModelGesture != "None";
+        bool ruleValid  = !string.IsNullOrEmpty(RuleGesture)  && RuleGesture  != "None";
+
+        switch (gestureSource)
+        {
+            case GestureSource.Rule:
+                return ruleValid ? RuleGesture : "None";
+
+            case GestureSource.EitherMatch:
+                if (modelValid) return ModelGesture;
+                if (ruleValid)  return RuleGesture;
+                return "None";
+
+            case GestureSource.BothMatch:
+                if (modelValid && ruleValid &&
+                    string.Equals(ModelGesture, RuleGesture, System.StringComparison.OrdinalIgnoreCase))
+                    return ModelGesture;
+                return "None";
+
+            case GestureSource.Model:
+            default:
+                return modelValid ? ModelGesture : "None";
+        }
     }
 
 
