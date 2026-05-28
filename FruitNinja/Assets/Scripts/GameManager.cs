@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         NewGame();
     }
 
-    private void NewGame()
+    public void NewGame()
     {
         Time.timeScale = 1f;
 
