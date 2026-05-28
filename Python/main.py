@@ -24,6 +24,10 @@ DYNAMIC_MODEL_PATH = "models/dynamic_gesture/dynamic_gesture.tflite"
 VALID_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 VALID_DYNAMIC_CLASSES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+# Cửa sổ smoothing cho rule gesture (most-common qua N frame).
+# 5 frame ~ 80ms ở 60fps — đủ khử flicker biên mà không gây trễ rõ rệt.
+RULE_SMOOTH_WINDOW = 5
+
 
 def count_samples():
     try:
@@ -198,6 +202,7 @@ def main():
     history_length = 32
     point_history = deque(maxlen=history_length)
     finger_gesture_history = deque(maxlen=history_length)
+    rule_history = deque(maxlen=RULE_SMOOTH_WINDOW)
 
     # Khởi tạo Socket UDP
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -231,8 +236,10 @@ def main():
             landmark_list = [[lm[0], lm[1]] for lm in lmList]
             pre_processed = pre_process_landmark(landmark_list)
 
-            # Rule-based gesture (chạy song song, dùng cho fallback & verify ở Unity)
-            rule_gesture_name = rule_recognize_gesture(landmark_list)
+            # Rule-based gesture (chạy song song, dùng cho fallback & verify ở Unity).
+            # Smooth qua most-common của RULE_SMOOTH_WINDOW frame để khử flicker biên.
+            rule_history.append(rule_recognize_gesture(landmark_list))
+            rule_gesture_name = Counter(rule_history).most_common(1)[0][0]
 
             # Predict static gesture (always needed to act as trigger)
             if model_loaded and gesture_classifier is not None:
@@ -284,6 +291,8 @@ def main():
 
         else:
             point_history.append([0, 0])
+            rule_history.append("None")
+            rule_gesture_name = Counter(rule_history).most_common(1)[0][0]
 
         frame = draw_point_history(frame, point_history)
         draw_info(frame, mode, current_label, gesture_name, rule_gesture_name, dynamic_gesture_name, cached_static_counts, cached_dynamic_counts, model_loaded, dyn_model_loaded, fps)
