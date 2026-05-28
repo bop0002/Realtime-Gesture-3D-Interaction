@@ -12,12 +12,15 @@ public class Blade : MonoBehaviour
     [SerializeField] private string activateGesture = "Pointer";
     [Tooltip("Cho phép điều khiển bằng chuột song song (tiện debug khi chưa chạy camera).")]
     [SerializeField] private bool useMouse = true;
+    [Tooltip("Khi mất tín hiệu gesture đột ngột (chập chờn rule-based), giữ trạng thái slicing thêm bấy nhiêu giây trước khi thực sự StopSlice. 0.05–0.15s là vùng tốt; cao hơn dễ chém oan.")]
+    [SerializeField] private float dropTolerance = 0.1f;
 
     private Camera mainCamera;
     private Collider sliceCollider;
     private TrailRenderer sliceTrail;
 
     private bool wasActive;
+    private float dropTimer;
 
     public Vector3 direction { get; private set; }
     public bool slicing { get; private set; }
@@ -33,27 +36,35 @@ public class Blade : MonoBehaviour
     {
         StopSlice();
         wasActive = false;
+        dropTimer = 0f;
     }
 
     private void OnDisable()
     {
         StopSlice();
         wasActive = false;
+        dropTimer = 0f;
     }
 
     private void Update()
     {
         bool active = TryGetInput(out Vector3 screenPos);
 
-        if (active && !wasActive) {
-            StartSlice(screenPos);
-        } else if (!active && wasActive) {
-            StopSlice();
-        } else if (active) {
-            ContinueSlice(screenPos);
+        if (active) {
+            dropTimer = 0f;
+            if (!wasActive) StartSlice(screenPos);
+            else            ContinueSlice(screenPos);
+            wasActive = true;
+        } else if (wasActive) {
+            // Tay/gesture biến mất tạm thời: giữ slicing, không reset trail/collider.
+            // Blade đứng yên ở vị trí cuối; ContinueSlice không gọi nên direction không đổi.
+            dropTimer += Time.deltaTime;
+            if (dropTimer >= dropTolerance) {
+                StopSlice();
+                wasActive = false;
+                dropTimer = 0f;
+            }
         }
-
-        wasActive = active;
     }
 
     // Ưu tiên tay khi đang thấy tay; nếu không thì rơi về chuột (nếu bật).
