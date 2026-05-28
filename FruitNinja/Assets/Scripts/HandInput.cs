@@ -45,6 +45,18 @@ public class HandInput : MonoBehaviour
     [Tooltip("Sau bao lâu (giây) không nhận được data hợp lệ thì coi như mất tay.")]
     [SerializeField] private float lostHandTimeout = 0.2f;
 
+    public enum GestureSource
+    {
+        Model,        // chỉ dùng output từ TFLite model (như trước)
+        Rule,         // chỉ dùng rule-based đếm ngón từ Python
+        EitherMatch,  // ưu tiên Model; nếu Model = None thì lấy Rule
+        BothMatch,    // chỉ cho gesture khi Model == Rule (chống false-positive)
+    }
+
+    [Header("Gesture Source")]
+    [Tooltip("Chọn nguồn gesture dùng cho CurrentGesture. Blade/PauseMenu đang đọc CurrentGesture nên dùng Model giữ hành vi cũ; BothMatch chắc tay hơn cho gesture 'Open' (pause).")]
+    [SerializeField] private GestureSource gestureSource = GestureSource.Model;
+
     [Header("Debug")]
     [Tooltip("Log khoảng nx/ny thực tế tay quét tới (min/max) để hiệu chỉnh Active Region.")]
     [SerializeField] private bool debugLogRange = false;
@@ -57,7 +69,13 @@ public class HandInput : MonoBehaviour
     /// <summary>Vị trí màn hình (pixel) của control point, đã smooth.</summary>
     public Vector3 ScreenPosition { get; private set; }
 
-    /// <summary>Gesture mới nhất từ Python ("Open"/"Close"/"Pointer"/...).</summary>
+    /// <summary>Gesture từ TFLite model phía Python.</summary>
+    public string ModelGesture { get; private set; } = "None";
+
+    /// <summary>Gesture rule-based đếm ngón từ Python (Open/Close/Pointer/Peace). "None" nếu payload không có.</summary>
+    public string RuleGesture { get; private set; } = "None";
+
+    /// <summary>Gesture cuối cùng theo gestureSource — Blade/PauseMenu đọc trường này.</summary>
     public string CurrentGesture { get; private set; } = "None";
 
     private float lastValidTime = -999f;
@@ -73,9 +91,11 @@ public class HandInput : MonoBehaviour
     {
         if (udpReceive == null) { HandVisible = false; return; }
 
-        if (TryParse(udpReceive.data, out Vector3 rawScreen, out string gesture))
+        if (TryParse(udpReceive.data, out Vector3 rawScreen, out string gesture, out string ruleGesture))
         {
-            CurrentGesture = gesture;
+            ModelGesture = gesture;
+            RuleGesture = ruleGesture;
+            CurrentGesture = ResolveCurrentGesture();
             lastValidTime = Time.time;
 
             if (positionSmoothing > 0f && hasSmoothed)
@@ -90,6 +110,8 @@ public class HandInput : MonoBehaviour
         HandVisible = !stale;
         if (stale)
         {
+            ModelGesture = "None";
+            RuleGesture = "None";
             CurrentGesture = "None";
             hasSmoothed = false;
             filterX.Reset();
@@ -97,10 +119,38 @@ public class HandInput : MonoBehaviour
         }
     }
 
-    private bool TryParse(string data, out Vector3 screenPos, out string gesture)
+    private string ResolveCurrentGesture()
+    {
+        bool modelValid = !string.IsNullOrEmpty(ModelGesture) && ModelGesture != "None";
+        bool ruleValid  = !string.IsNullOrEmpty(RuleGesture)  && RuleGesture  != "None";
+
+        switch (gestureSource)
+        {
+            case GestureSource.Rule:
+                return ruleValid ? RuleGesture : "None";
+
+            case GestureSource.EitherMatch:
+                if (modelValid) return ModelGesture;
+                if (ruleValid)  return RuleGesture;
+                return "None";
+
+            case GestureSource.BothMatch:
+                if (modelValid && ruleValid &&
+                    string.Equals(ModelGesture, RuleGesture, System.StringComparison.OrdinalIgnoreCase))
+                    return ModelGesture;
+                return "None";
+
+            case GestureSource.Model:
+            default:
+                return modelValid ? ModelGesture : "None";
+        }
+    }
+
+    private bool TryParse(string data, out Vector3 screenPos, out string gesture, out string ruleGesture)
     {
         screenPos = Vector3.zero;
         gesture = "None";
+        ruleGesture = "None";
 
         if (string.IsNullOrEmpty(data) || data.Length < 2 || data[0] != '[') return false;
 
@@ -146,6 +196,10 @@ public class HandInput : MonoBehaviour
 
         if (parts.Length > HandPoints * 3)
             gesture = parts[HandPoints * 3].Trim(' ', '\'', '"');
+
+        // Rule gesture nằm sau width/height (index dimBase+2 = 66). Backward-compatible.
+        if (parts.Length > dimBase + 2)
+            ruleGesture = parts[dimBase + 2].Trim(' ', '\'', '"');
 
         return true;
     }
