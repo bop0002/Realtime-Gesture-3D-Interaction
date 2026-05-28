@@ -1,0 +1,222 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global/global}
+  \entry{ravikiran2013hand}{article}{}{}
+    \true{moreauthor}
+    \true{morelabelname}
+    \name{author}{3}{}{%
+      {{hash=RJ}{%
+         family={Ravikiran},
+         familyi={R\bibinitperiod},
+         given={J},
+         giveni={J},
+      }}%
+      {{hash=MK}{%
+         family={Mahesh},
+         familyi={M\bibinitperiod},
+         given={K},
+         giveni={K},
+      }}%
+      {{hash=MS}{%
+         family={Mahishi},
+         familyi={M\bibinitperiod},
+         given={Suhas},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Foundation of Computer Science}%
+    }
+    \strng{namehash}{RJ+1}
+    \strng{fullhash}{RJMKMS+1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{number}{12}
+    \field{title}{Hand gesture recognition for sign language transcription}
+    \field{volume}{78}
+    \field{journaltitle}{International Journal of Computer Applications}
+    \field{year}{2013}
+  \endentry
+
+  \entry{opencv_library}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=I}{%
+         family={Itseez},
+         familyi={I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{I1}
+    \strng{fullhash}{I1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{\url{https://github.com/itseez/opencv}}
+    \field{title}{Open Source Computer Vision Library}
+    \field{year}{2015}
+  \endentry
+
+  \entry{lugaresi2019mediapipe}{article}{}{}
+    \true{moreauthor}
+    \true{morelabelname}
+    \name{author}{10}{}{%
+      {{hash=LC}{%
+         family={Lugaresi},
+         familyi={L\bibinitperiod},
+         given={Camillo},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=TJ}{%
+         family={Tang},
+         familyi={T\bibinitperiod},
+         given={Jiuqiang},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=NH}{%
+         family={Nash},
+         familyi={N\bibinitperiod},
+         given={Hadon},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=MC}{%
+         family={McClanahan},
+         familyi={M\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=UE}{%
+         family={Uboweja},
+         familyi={U\bibinitperiod},
+         given={Esha},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Somani},
+         familyi={S\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=ZP}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Peter},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=TL}{%
+         family={Truong},
+         familyi={T\bibinitperiod},
+         given={Laurence},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=DA}{%
+         family={Dobrinski},
+         familyi={D\bibinitperiod},
+         given={Andrea},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=LZ}{%
+         family={Liang},
+         familyi={L\bibinitperiod},
+         given={Zixin},
+         giveni={Z\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LC+1}
+    \strng{fullhash}{LCTJNHMCUESMZPTLDALZ+1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Mediapipe: A framework for perceiving and processing reality}
+    \field{journaltitle}{arXiv preprint arXiv:1906.08172}
+    \field{year}{2019}
+  \endentry
+
+  \entry{unity3d}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=U}{%
+         family={{Unity Technologies}},
+         familyi={U\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{U1}
+    \strng{fullhash}{U1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{\url{https://unity.com}}
+    \field{title}{Unity Game Engine}
+    \field{year}{2004}
+  \endentry
+
+  \entry{rfc768udp}{report}{}{}
+    \name{author}{1}{}{%
+      {{hash=PJ}{%
+         family={Postel},
+         familyi={P\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {RFC Editor}%
+    }
+    \strng{namehash}{PJ1}
+    \strng{fullhash}{PJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{Internet Requests for Comments}
+    \field{number}{768}
+    \field{title}{User Datagram Protocol}
+    \field{type}{RFC}
+    \field{year}{1980}
+  \endentry
+
+  \entry{casiez2012one}{inproceedings}{}{}
+    \name{author}{3}{}{%
+      {{hash=CG}{%
+         family={Casiez},
+         familyi={C\bibinitperiod},
+         given={G{\'e}ry},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=RN}{%
+         family={Roussel},
+         familyi={R\bibinitperiod},
+         given={Nicolas},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=VD}{%
+         family={Vogel},
+         familyi={V\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{CG+1}
+    \strng{fullhash}{CGRNVD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}
+    \field{pages}{2527\bibrangedash 2530}
+    \field{title}{One Euro Filter: A simple 1-parameter adaptive filter for
+  noisy input in applications}
+    \field{year}{2012}
+  \endentry
+\enddatalist
+\endinput
