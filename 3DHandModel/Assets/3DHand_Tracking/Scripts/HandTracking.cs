@@ -13,6 +13,12 @@ public class HandTracking : MonoBehaviour
     [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Càng nhỏ thì bàn tay càng to. 100 = mặc định cũ, 50 = gấp đôi.")]
     [SerializeField] private float coordinateDivisor = 75f;
 
+    [Header("Hand Physics")]
+    [Tooltip("Bật để auto-add SphereCollider + kinematic Rigidbody lên 21 Points và driver chúng qua MovePosition trong FixedUpdate (cho phép tay đẩy được vật lý).")]
+    [SerializeField] private bool enableHandPhysics = true;
+    [Tooltip("Radius của SphereCollider trên mỗi Point. Tune theo coordinateDivisor — tay càng to (divisor nhỏ) thì collider có thể giảm xuống.")]
+    [SerializeField] private float pointColliderRadius = 0.15f;
+
     [Header("Gesture Filter")]
     [Tooltip("Các gesture cần bỏ qua hoàn toàn — khi Python gửi 1 gesture này, ModelGesture sẽ giữ nguyên giá trị trước đó (xem như không nhận gesture mới). Hữu ích khi model nhầm Close ↔ ThumbsUp/OK.")]
     [SerializeField] private string[] ignoredGestures = new[] { "ThumbsUp" };
@@ -47,11 +53,75 @@ public class HandTracking : MonoBehaviour
         (0,17),(13,17),(17,18),(18,19),(19,20) //5st finger
     };
 
+    // Target local position cho mỗi Point — set trong Update(), consume trong FixedUpdate().
+    // Tách 2 step vì kinematic Rigidbody cần MovePosition (FixedUpdate) thay vì set transform
+    // trực tiếp — set trực tiếp sẽ teleport rb, engine không sinh velocity → không đẩy được cube.
+    private Vector3[] _targetLocalPositions;
+    private Rigidbody[] _pointRigidbodies;
+    private Collider[] _pointColliders;
+    private bool _hasFreshTarget;
+
     private void Start()
     {
         for(int i =0;i<bones.Length;i++)
         {
             Lines[i].Init(Points[bones[i].startPoint],Points[bones[i].endPoint],$"{bones[i].startPoint} -{bones[i].endPoint}");
+        }
+
+        _targetLocalPositions = new Vector3[handPoints];
+        for (int i = 0; i < handPoints && i < Points.Length; i++)
+        {
+            if (Points[i] != null) _targetLocalPositions[i] = Points[i].localPosition;
+        }
+
+        if (enableHandPhysics) SetupHandPhysics();
+    }
+
+    private void SetupHandPhysics()
+    {
+        _pointRigidbodies = new Rigidbody[handPoints];
+        _pointColliders = new Collider[handPoints];
+
+        for (int i = 0; i < handPoints && i < Points.Length; i++)
+        {
+            if (Points[i] == null) continue;
+            var go = Points[i].gameObject;
+
+            // QUAN TRỌNG: Rigidbody phải add TRƯỚC SphereCollider.
+            // Nếu collider add trước khi GO có Rigidbody, Unity register nó vào static
+            // collision tree và không tự promote sang dynamic khi rb được add sau đó →
+            // cube sleeping không bị wake bởi collider tay. Add rb trước đảm bảo collider
+            // sinh ra biết ngay là dynamic collider của rb này.
+            var rb = go.GetComponent<Rigidbody>();
+            if (rb == null) rb = go.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            _pointRigidbodies[i] = rb;
+
+            var col = go.GetComponent<SphereCollider>();
+            if (col == null) col = go.AddComponent<SphereCollider>();
+            col.radius = pointColliderRadius;
+            col.isTrigger = false;
+            _pointColliders[i] = col;
+        }
+
+        // Flush pending transform/component changes vào physics scene ngay frame này,
+        // tránh trường hợp collider mới add nhưng physics chưa thấy đến tick sau.
+        Physics.SyncTransforms();
+    }
+
+    /// <summary>
+    /// Bật/tắt collider tay runtime — HandGrabber gọi để disable collider lúc đang nắm object
+    /// (tránh object đã grab + parent vào palmAnchor bị các collider tay khác đụng).
+    /// </summary>
+    public void SetHandPhysicsEnabled(bool on)
+    {
+        if (_pointColliders == null) return;
+        for (int i = 0; i < _pointColliders.Length; i++)
+        {
+            if (_pointColliders[i] != null) _pointColliders[i].enabled = on;
         }
     }
 
@@ -71,13 +141,21 @@ public class HandTracking : MonoBehaviour
             var x = 7 - float.Parse(points[i*3])/divisor; //Tinh toan sau
             var y = float.Parse(points[i*3+1])/divisor;
             var z = float.Parse(points[i*3+2])/divisor;
-            
+
             var tmp = new Vector3(x,y,z);
 
             // Debug.Log($"X:{tmp.x}, Y: {tmp.y},Z:{tmp.z}" );
 
-            Points[i].localPosition = tmp;
+            if (enableHandPhysics)
+            {
+                _targetLocalPositions[i] = tmp;
+            }
+            else
+            {
+                Points[i].localPosition = tmp;
+            }
         }
+        _hasFreshTarget = enableHandPhysics;
 
 
         // Parse model gesture (index 63) — backward compatible với payload cũ
@@ -110,6 +188,26 @@ public class HandTracking : MonoBehaviour
 
         //HandleHandModel();
 
+    }
+
+    private void FixedUpdate()
+    {
+        if (!enableHandPhysics || !_hasFreshTarget || _pointRigidbodies == null) return;
+
+        for (int i = 0; i < handPoints && i < Points.Length; i++)
+        {
+            var rb = _pointRigidbodies[i];
+            if (rb == null || Points[i] == null) continue;
+
+            // Convert target localPosition → world. Parent có thể là HandTracking transform
+            // hoặc null (Points ở scene root) — handle cả 2.
+            var parent = Points[i].parent;
+            Vector3 worldTarget = parent != null
+                ? parent.TransformPoint(_targetLocalPositions[i])
+                : _targetLocalPositions[i];
+
+            rb.MovePosition(worldTarget);
+        }
     }
 
     private string ResolveCurrentGesture()

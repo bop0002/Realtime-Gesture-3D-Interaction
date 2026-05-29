@@ -21,6 +21,13 @@ public class Grabbable : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         if (targetRenderer == null) targetRenderer = GetComponentInChildren<Renderer>();
         CacheOriginalColor();
+
+        // Cube settle trong box → sleep. Kinematic hand collider với MovePosition không
+        // luôn wake sleeping rb một cách đáng tin cậy → cube không bị đẩy. sleepThreshold=0
+        // giữ rb luôn awake để chịu va chạm ngay từ lần đầu. Sau grab+release đầu tiên,
+        // Release() set linearVelocity nên rb tự wake — đó là lý do bug "phải grab 1 lần
+        // mới đẩy được".
+        if (rb != null) rb.sleepThreshold = 0f;
     }
 
     private void CacheOriginalColor()

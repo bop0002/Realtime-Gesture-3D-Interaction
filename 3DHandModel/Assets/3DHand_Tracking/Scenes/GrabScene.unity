@@ -2796,11 +2796,14 @@ MonoBehaviour:
   - {fileID: 1957741058}
   - {fileID: 1204778259}
   - {fileID: 1633117049}
-  IsDebug: 0
+  IsDebug: 1
   debugHand: {fileID: 1023900716}
-  coordinateDivisor: 50
+  coordinateDivisor: 45
+  enableHandPhysics: 1
+  pointColliderRadius: 0.15
   ignoredGestures:
   - ThumbsUp
+  gestureSource: 0
 --- !u!4 &956551590
 Transform:
   m_ObjectHideFlags: 0
@@ -5844,7 +5847,9 @@ MonoBehaviour:
   port: 5026
   startRecieving: 1
   printToConsole: 0
+  printGestureToConsole: 0
   data: 
+  gesture: 
 --- !u!4 &2113126922
 Transform:
   m_ObjectHideFlags: 0
@@ -6017,7 +6022,7 @@ MonoBehaviour:
     size: 0.5
     color: {r: 0.4, g: 1, b: 0.5, a: 1}
     mass: 0.2
-  autoFillCount: 40
+  autoFillCount: 100
   autoFillMinSize: 0.4
   autoFillMaxSize: 0.4
   autoFillSpawnHeightRange: {x: 5, y: 9}
