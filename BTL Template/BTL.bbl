@@ -24,14 +24,14 @@
       {{hash=RJ}{%
          family={Ravikiran},
          familyi={R\bibinitperiod},
-         given={J},
-         giveni={J},
+         given={J.},
+         giveni={J\bibinitperiod},
       }}%
       {{hash=MK}{%
          family={Mahesh},
          familyi={M\bibinitperiod},
-         given={K},
-         giveni={K},
+         given={K.},
+         giveni={K\bibinitperiod},
       }}%
       {{hash=MS}{%
          family={Mahishi},
@@ -54,20 +54,22 @@
     \field{year}{2013}
   \endentry
 
-  \entry{opencv_library}{misc}{}{}
+  \entry{opencv_library}{article}{}{}
     \name{author}{1}{}{%
-      {{hash=I}{%
-         family={Itseez},
-         familyi={I\bibinitperiod},
+      {{hash=BG}{%
+         family={Bradski},
+         familyi={B\bibinitperiod},
+         given={Gary},
+         giveni={G\bibinitperiod},
       }}%
     }
-    \strng{namehash}{I1}
-    \strng{fullhash}{I1}
+    \strng{namehash}{BG1}
+    \strng{fullhash}{BG1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{howpublished}{\url{https://github.com/itseez/opencv}}
-    \field{title}{Open Source Computer Vision Library}
-    \field{year}{2015}
+    \field{title}{The OpenCV Library}
+    \field{journaltitle}{Dr. Dobb's Journal of Software Tools}
+    \field{year}{2000}
   \endentry
 
   \entry{lugaresi2019mediapipe}{article}{}{}
@@ -165,20 +167,19 @@
       {{hash=PJ}{%
          family={Postel},
          familyi={P\bibinitperiod},
-         given={J.},
+         given={Jon},
          giveni={J\bibinitperiod},
       }}%
-    }
-    \list{publisher}{1}{%
-      {RFC Editor}%
     }
     \strng{namehash}{PJ1}
     \strng{fullhash}{PJ1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{howpublished}{Internet Requests for Comments}
     \field{number}{768}
     \field{title}{User Datagram Protocol}
+    \list{institution}{1}{%
+      {IETF}%
+    }
     \field{type}{RFC}
     \field{year}{1980}
   \endentry
