@@ -883,6 +883,7 @@ MonoBehaviour:
   handInput: {fileID: 1098069340}
   activateGesture: Pointer
   useMouse: 1
+  dropTolerance: 0.1
 --- !u!135 &835024515
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1133,6 +1134,7 @@ MonoBehaviour:
   oneEuroDCutoff: 1
   positionSmoothing: 0
   lostHandTimeout: 0.2
+  gestureSource: 1
   debugLogRange: 0
 --- !u!114 &1098069341
 MonoBehaviour:
@@ -1149,7 +1151,9 @@ MonoBehaviour:
   port: 5026
   startRecieving: 1
   printToConsole: 0
+  printGestureToConsole: 1
   data: 
+  gesture: 
 --- !u!4 &1098069342
 Transform:
   m_ObjectHideFlags: 0

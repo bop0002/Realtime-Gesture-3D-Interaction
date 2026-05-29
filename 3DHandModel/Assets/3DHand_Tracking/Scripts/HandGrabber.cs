@@ -199,6 +199,9 @@ public class HandGrabber : MonoBehaviour
         HighlightOnly(null);
         grabHeldFor = 0f;
         releaseHeldFor = 0f;
+        // Object đã grab parent vào palmAnchor — nếu collider tay vẫn bật, các Point khác
+        // có thể đụng vào object đang cầm và đẩy nó lệch khỏi anchor.
+        if (handTracking != null) handTracking.SetHandPhysicsEnabled(false);
     }
 
     private void ReleaseCurrent()
@@ -209,6 +212,7 @@ public class HandGrabber : MonoBehaviour
         grabHeldFor = 0f;
         releaseHeldFor = 0f;
         palmSamples.Clear();
+        if (handTracking != null) handTracking.SetHandPhysicsEnabled(true);
     }
 
     private void RecordPalmSample()
