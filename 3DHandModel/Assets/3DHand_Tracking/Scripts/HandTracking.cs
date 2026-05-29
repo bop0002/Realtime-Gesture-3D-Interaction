@@ -1,6 +1,5 @@
 using UnityEngine;
-using UnityEditor;
-using System.Drawing;
+
 public class HandTracking : MonoBehaviour
 {
     [SerializeField] private UDPReceive udpReceive;
