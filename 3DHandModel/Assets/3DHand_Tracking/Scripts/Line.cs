@@ -23,7 +23,7 @@ public class Line : MonoBehaviour
 
     void Update()
     {
-        if(_startPoint!=null||_endPoint!=null)
+        if(_startPoint!=null && _endPoint!=null)
         {
             lineRenderer.SetPosition(0,_startPoint.position);
             lineRenderer.SetPosition(1,_endPoint.position);

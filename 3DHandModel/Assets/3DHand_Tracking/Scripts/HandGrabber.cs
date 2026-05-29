@@ -172,6 +172,14 @@ public class HandGrabber : MonoBehaviour
             {
                 var g = hits[i].GetComponentInParent<Grabbable>();
                 if (g == null || g.IsGrabbed) continue;
+
+                // Tự động đánh thức Rigidbody đang ngủ để va chạm vật lý với xương tay (kinematic) hoạt động ngay lập tức
+                var targetRb = g.GetComponent<Rigidbody>();
+                if (targetRb != null && targetRb.IsSleeping())
+                {
+                    targetRb.WakeUp();
+                }
+
                 if (!overlapBuffer.Add(g)) continue;
                 float d = (g.transform.position - centroid).sqrMagnitude;
                 if (d < bestDist)
