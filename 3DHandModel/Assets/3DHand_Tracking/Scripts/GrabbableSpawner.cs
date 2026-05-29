@@ -36,10 +36,24 @@ public class GrabbableSpawner : MonoBehaviour
     [SerializeField] private float wallThickness = 0.3f;
     [SerializeField] private Color boxColor = new Color(0.35f, 0.35f, 0.4f);
 
+    // Đếm tăng dần để đặt tên object — giữ unique kể cả khi bấm spawn nhiều lần lúc đang chơi.
+    private int spawnSerial;
+
     private void Start()
     {
         if (createBox) SpawnBox();
-        for (int i = 0; i < entries.Length; i++) Spawn(entries[i], i);
+        SpawnBatch();
+    }
+
+    /// <summary>
+    /// Spawn 1 lượt: các entry thủ công + auto-fill cubes. Gọi được lúc đang Play
+    /// (qua nút Inspector hoặc context menu component) để spawn lại object trong game.
+    /// Mỗi lần bấm cộng dồn thêm 1 batch (không xoá object cũ).
+    /// </summary>
+    [ContextMenu("Spawn Batch (Entries + AutoFill)")]
+    public void SpawnBatch()
+    {
+        for (int i = 0; i < entries.Length; i++) Spawn(entries[i], spawnSerial++);
         AutoFill();
     }
 
@@ -64,7 +78,7 @@ public class GrabbableSpawner : MonoBehaviour
                 color = Color.HSVToRGB(Random.value, Random.Range(0.5f, 0.9f), Random.Range(0.7f, 1f)),
                 mass = 0.2f
             };
-            Spawn(e, entries.Length + i);
+            Spawn(e, spawnSerial++);
         }
     }
 

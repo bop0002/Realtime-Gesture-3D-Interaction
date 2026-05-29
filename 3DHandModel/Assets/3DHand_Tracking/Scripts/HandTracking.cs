@@ -9,8 +9,20 @@ public class HandTracking : MonoBehaviour
     [SerializeField] private GameObject debugHand;
 
     [Header("World Scale")]
-    [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Càng nhỏ thì bàn tay càng to. 100 = mặc định cũ, 50 = gấp đôi.")]
+    [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Khi bật Reach Remap, trường này CHỈ còn quy định KÍCH THƯỚC bàn tay (offset mỗi điểm so với cổ tay), không còn ảnh hưởng tầm với. Càng nhỏ tay càng to.")]
     [SerializeField] private float coordinateDivisor = 75f;
+
+    [Header("Reach Remap (Gain)")]
+    [Tooltip("Tách tầm với khỏi kích thước tay: ánh xạ vị trí cổ tay (chuẩn hoá 0..1 theo khung hình) vào vùng world rộng reachRange quanh reachCenter. Cho tay với tới toàn playground mà không cần khua nhiều. Tắt để về hành vi map 1:1 cũ.")]
+    [SerializeField] private bool enableReachRemap = true;
+    [Tooltip("Tâm vùng với tới trong world (thường = tâm playground box). Camera ở giữa khung → điểm này.")]
+    [SerializeField] private Vector3 reachCenter = new Vector3(1f, 3.5f, 0f);
+    [Tooltip("Bề rộng vùng tay quét tới theo trục X (ngang) và Y (dọc). Mép khung hình → reachCenter ± range/2. Tăng = với xa hơn với cùng quãng tay vật lý (gain).")]
+    [SerializeField] private Vector2 reachRange = new Vector2(30f, 9f);
+    [Tooltip("Hệ số khuếch đại chiều sâu (Z). Z của MediaPipe nhiễu & nhỏ nên depth vốn hạn chế; 1 = giữ scale cũ, tăng để đẩy forward/back rõ hơn.")]
+    [SerializeField] private float depthGain = 1f;
+    [Tooltip("Kích thước khung hình camera (px) dùng để chuẩn hoá khi payload UDP không kèm W,H. Khớp cap.set ở Python (mặc định 960x540).")]
+    [SerializeField] private Vector2 fallbackFrameSize = new Vector2(960f, 540f);
 
     [Header("Hand Physics")]
     [Tooltip("Bật để auto-add SphereCollider + kinematic Rigidbody lên 21 Points và driver chúng qua MovePosition trong FixedUpdate (cho phép tay đẩy được vật lý).")]
@@ -134,14 +146,50 @@ public class HandTracking : MonoBehaviour
         data = data.Remove(data.Length-1,1);
         string[] points = data.Split(',');
 
+        var divisor = coordinateDivisor > 0.0001f ? coordinateDivisor : 100f;
+
+        // Cổ tay (Point 0) là gốc: vị trí của nó quyết định tầm với (reach remap),
+        // còn các điểm khác chỉ là offset cố định theo divisor (giữ nguyên kích thước tay).
+        float wristRawX = float.Parse(points[0]);
+        float wristRawY = float.Parse(points[1]);
+        float wristRawZ = float.Parse(points[2]);
+
+        Vector3 wristWorld;
+        if (enableReachRemap)
+        {
+            // W,H đi kèm payload ở index 64,65 (sau model_gesture@63). Không có thì dùng fallback.
+            float frameW = fallbackFrameSize.x, frameH = fallbackFrameSize.y;
+            if (points.Length > handPoints * 3 + 2)
+            {
+                float.TryParse(points[handPoints * 3 + 1].Trim(' ', '\'', '"'), out float pw);
+                float.TryParse(points[handPoints * 3 + 2].Trim(' ', '\'', '"'), out float ph);
+                if (pw > 1f) frameW = pw;
+                if (ph > 1f) frameH = ph;
+            }
+
+            // Chuẩn hoá 0..1 (Python đã flip Y nên ny=0 ở đáy, =1 ở đỉnh).
+            float nx = wristRawX / frameW;
+            float ny = wristRawY / frameH;
+            wristWorld = new Vector3(
+                reachCenter.x + (0.5f - nx) * reachRange.x,   // (0.5-nx) giữ mirror X như công thức "7 - x" cũ
+                reachCenter.y + (ny - 0.5f) * reachRange.y,
+                reachCenter.z + (wristRawZ / divisor) * depthGain);
+        }
+        else
+        {
+            // Hành vi cũ: map 1:1 pixel/divisor, gốc world tại "7 - x".
+            wristWorld = new Vector3(7f - wristRawX / divisor, wristRawY / divisor, wristRawZ / divisor);
+        }
+
         for(int i = 0;i<handPoints;i++)
         {
-            var divisor = coordinateDivisor > 0.0001f ? coordinateDivisor : 100f;
-            var x = 7 - float.Parse(points[i*3])/divisor; //Tinh toan sau
-            var y = float.Parse(points[i*3+1])/divisor;
-            var z = float.Parse(points[i*3+2])/divisor;
+            // Offset mỗi điểm so với cổ tay (mirror X để khớp với hệ "7 - x"), chia divisor => kích thước tay cố định.
+            var offset = new Vector3(
+                -(float.Parse(points[i*3])   - wristRawX) / divisor,
+                 (float.Parse(points[i*3+1]) - wristRawY) / divisor,
+                 (float.Parse(points[i*3+2]) - wristRawZ) / divisor);
 
-            var tmp = new Vector3(x,y,z);
+            var tmp = wristWorld + offset;
 
             // Debug.Log($"X:{tmp.x}, Y: {tmp.y},Z:{tmp.z}" );
 
