@@ -1,3 +1,69 @@
+### Python
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# dotenv environment variable files
+.env
+
+# Virtual environments
+.venv
+env/
+venv/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.pytest_cache/
+
+# Type checkers
+.mypy_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+# .python-version
+
+### Windows
+# Windows thumbnail cache files
+Thumbs.db
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows shortcuts
+*.lnk
+
+### JetBrains
+# JetBrains IDE directory
+.idea/
+
+# CMake build directories
+cmake-build-*/
+
+# File-based project format
+*.iws
+*.iml
+
+# IntelliJ build output
+out/
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
@@ -100,3 +166,30 @@ InitTestScene*.unity*
 
 # IDE
 /.idea/
+
+### LaTeX
+# Ignore all auxiliary and log files in BTL Template directory
+BTL\ Template/*.aux
+BTL\ Template/*.log
+BTL\ Template/*.out
+BTL\ Template/*.toc
+BTL\ Template/*.lof
+BTL\ Template/*.lot
+BTL\ Template/*.synctex.gz
+BTL\ Template/*.run.xml
+BTL\ Template/*-blx.bib
+BTL\ Template/*.bbl
+BTL\ Template/*.blg
+BTL\ Template/Chuong/*.aux
+BTL\ Template/Chuong/*.log
+BTL\ Template/Chuong/*.out
+BTL\ Template/Chuong/*.toc
+BTL\ Template/Chuong/*.lof
+BTL\ Template/Chuong/*.lot
+BTL\ Template/Chuong/*.synctex.gz
+BTL\ Template/Chuong/*.run.xml
+BTL\ Template/Chuong/*-blx.bib
+BTL\ Template/Chuong/*.bbl
+BTL\ Template/Chuong/*.blg
+BTL\ Template/Chuong/*.pdf
+
