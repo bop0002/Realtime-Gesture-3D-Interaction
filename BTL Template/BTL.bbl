@@ -146,6 +146,23 @@
     \field{year}{2019}
   \endentry
 
+  \entry{tflite2017}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=G}{%
+         family={{Google LLC}},
+         familyi={G\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{G1}
+    \strng{fullhash}{G1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{howpublished}{\url{https://www.tensorflow.org/lite}}
+    \field{title}{Tensor{F}low {L}ite: Machine learning on mobile and embedded
+  devices}
+    \field{year}{2017}
+  \endentry
+
   \entry{unity3d}{misc}{}{}
     \name{author}{1}{}{%
       {{hash=U}{%
