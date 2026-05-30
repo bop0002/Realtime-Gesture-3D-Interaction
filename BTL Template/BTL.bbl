@@ -158,8 +158,9 @@
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{howpublished}{\url{https://unity.com}}
-    \field{title}{Unity Game Engine}
-    \field{year}{2004}
+    \field{note}{Accessed: May 2026}
+    \field{title}{{Unity Real-Time Development Platform}}
+    \field{year}{2026}
   \endentry
 
   \entry{rfc768udp}{report}{}{}

@@ -166,3 +166,30 @@ InitTestScene*.unity*
 
 # IDE
 /.idea/
+
+### LaTeX
+# Ignore all auxiliary and log files in BTL Template directory
+BTL\ Template/*.aux
+BTL\ Template/*.log
+BTL\ Template/*.out
+BTL\ Template/*.toc
+BTL\ Template/*.lof
+BTL\ Template/*.lot
+BTL\ Template/*.synctex.gz
+BTL\ Template/*.run.xml
+BTL\ Template/*-blx.bib
+BTL\ Template/*.bbl
+BTL\ Template/*.blg
+BTL\ Template/Chuong/*.aux
+BTL\ Template/Chuong/*.log
+BTL\ Template/Chuong/*.out
+BTL\ Template/Chuong/*.toc
+BTL\ Template/Chuong/*.lof
+BTL\ Template/Chuong/*.lot
+BTL\ Template/Chuong/*.synctex.gz
+BTL\ Template/Chuong/*.run.xml
+BTL\ Template/Chuong/*-blx.bib
+BTL\ Template/Chuong/*.bbl
+BTL\ Template/Chuong/*.blg
+BTL\ Template/Chuong/*.pdf
+

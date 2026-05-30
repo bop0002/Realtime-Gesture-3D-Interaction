@@ -64,91 +64,103 @@
 \newlabel{fig:mediapipe_landmarks}{{2.1}{6}{Sơ đồ cấu trúc 21 điểm landmark khớp tay trong MediaPipe}{figure.caption.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}Nhận dạng cử chỉ tay bằng Học máy và Heuristics}{6}{section.2.3}\protected@file@percent }
 \newlabel{section:2.3}{{2.3}{6}{Nhận dạng cử chỉ tay bằng Học máy và Heuristics}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Phương pháp nhận dạng cử chỉ bằng luật hình học (Heuristics)}{6}{subsection.2.3.1}\protected@file@percent }
-\newlabel{eq:dist_formula}{{2.1}{6}{Phương pháp nhận dạng cử chỉ bằng luật hình học (Heuristics)}{equation.2.1}{}}
-\newlabel{eq:finger_state}{{2.2}{6}{Phương pháp nhận dạng cử chỉ bằng luật hình học (Heuristics)}{equation.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mô hình toán chuẩn hóa tọa độ đặc trưng}{7}{subsection.2.3.2}\protected@file@percent }
-\newlabel{eq:trans_math}{{2.3}{7}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.3}{}}
-\newlabel{eq:dmax}{{2.4}{7}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.4}{}}
-\newlabel{eq:normalize_coord}{{2.5}{7}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{8}{subsection.2.3.3}\protected@file@percent }
-\newlabel{eq:relu_func}{{2.6}{8}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.6}{}}
-\newlabel{eq:softmax_prob}{{2.7}{8}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.7}{}}
-\newlabel{eq:cross_entropy_loss}{{2.8}{8}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{8}{subsection.2.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Thuật toán luật hình học Heuristics}{6}{subsection.2.3.1}\protected@file@percent }
+\newlabel{eq:dist_formula}{{2.1}{6}{Thuật toán luật hình học Heuristics}{equation.2.1}{}}
+\newlabel{eq:finger_state}{{2.2}{7}{Thuật toán luật hình học Heuristics}{equation.2.2}{}}
+\newlabel{eq:thumb_state}{{2.3}{7}{Thuật toán luật hình học Heuristics}{equation.2.3}{}}
+\newlabel{eq:state_vector}{{2.4}{7}{Thuật toán luật hình học Heuristics}{equation.2.4}{}}
+\newlabel{eq:ok_heuristic}{{2.5}{8}{Thuật toán luật hình học Heuristics}{equation.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mô hình toán chuẩn hóa tọa độ đặc trưng}{8}{subsection.2.3.2}\protected@file@percent }
+\newlabel{eq:trans_math}{{2.6}{8}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.6}{}}
+\newlabel{eq:dmax}{{2.7}{8}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.7}{}}
+\newlabel{eq:normalize_coord}{{2.8}{8}{Mô hình toán chuẩn hóa tọa độ đặc trưng}{equation.2.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{9}{subsection.2.3.3}\protected@file@percent }
+\newlabel{eq:relu_func}{{2.9}{9}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.9}{}}
+\newlabel{eq:softmax_prob}{{2.10}{9}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.10}{}}
+\newlabel{eq:cross_entropy_loss}{{2.11}{9}{Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{equation.2.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{10}{subsection.2.3.4}\protected@file@percent }
+\newlabel{eq:normalize_dynamic}{{2.12}{10}{Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{equation.2.12}{}}
+\newlabel{eq:majority_vote}{{2.13}{10}{Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{equation.2.13}{}}
 \citation{unity3d}
 \abx@aux@cite{0}{unity3d}
 \abx@aux@segm{0}{0}{unity3d}
 \citation{rfc768udp}
 \abx@aux@cite{0}{rfc768udp}
 \abx@aux@segm{0}{0}{rfc768udp}
-\newlabel{eq:normalize_dynamic}{{2.9}{9}{Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{equation.2.9}{}}
-\newlabel{eq:majority_vote}{{2.10}{9}{Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{equation.2.10}{}}
 \citation{casiez2012one}
 \abx@aux@cite{0}{casiez2012one}
 \abx@aux@segm{0}{0}{casiez2012one}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Giao thức truyền dữ liệu UDP thời gian thực}{10}{section.2.4}\protected@file@percent }
-\newlabel{section:2.4}{{2.4}{10}{Giao thức truyền dữ liệu UDP thời gian thực}{section.2.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Toán học của bộ lọc thích nghi chống rung One Euro Filter}{10}{section.2.5}\protected@file@percent }
-\newlabel{section:2.5}{{2.5}{10}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{section.2.5}{}}
-\newlabel{eq:derivative_discrete}{{2.11}{10}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.11}{}}
-\newlabel{eq:smooth_velocity}{{2.12}{10}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.12}{}}
-\newlabel{eq:alpha_d}{{2.13}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.13}{}}
-\newlabel{eq:fc_adaptive}{{2.14}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.14}{}}
-\newlabel{eq:alpha_adaptive}{{2.15}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.15}{}}
-\newlabel{eq:output_signal}{{2.16}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.16}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{12}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Giao thức truyền dữ liệu UDP thời gian thực}{11}{section.2.4}\protected@file@percent }
+\newlabel{section:2.4}{{2.4}{11}{Giao thức truyền dữ liệu UDP thời gian thực}{section.2.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Toán học của bộ lọc thích nghi chống rung One Euro Filter}{11}{section.2.5}\protected@file@percent }
+\newlabel{section:2.5}{{2.5}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{section.2.5}{}}
+\newlabel{eq:derivative_discrete}{{2.14}{11}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.14}{}}
+\newlabel{eq:smooth_velocity}{{2.15}{12}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.15}{}}
+\newlabel{eq:alpha_d}{{2.16}{12}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.16}{}}
+\newlabel{eq:fc_adaptive}{{2.17}{12}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.17}{}}
+\newlabel{eq:alpha_adaptive}{{2.18}{12}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.18}{}}
+\newlabel{eq:output_signal}{{2.19}{12}{Toán học của bộ lọc thích nghi chống rung One Euro Filter}{equation.2.19}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Các thuật toán hình học mô phỏng 3D trong Unity}{12}{section.2.6}\protected@file@percent }
+\newlabel{section:2.6}{{2.6}{12}{Các thuật toán hình học mô phỏng 3D trong Unity}{section.2.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.1}Thuật toán khuếch đại tầm với thích nghi (Reach Remap)}{12}{subsection.2.6.1}\protected@file@percent }
+\newlabel{eq:norm_reach}{{2.20}{13}{Thuật toán khuếch đại tầm với thích nghi (Reach Remap)}{equation.2.20}{}}
+\newlabel{eq:reach_remap_formula}{{2.21}{13}{Thuật toán khuếch đại tầm với thích nghi (Reach Remap)}{equation.2.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}Thuật toán xác định trọng tâm và định hướng lòng bàn tay}{13}{subsection.2.6.2}\protected@file@percent }
+\newlabel{eq:palm_centroid}{{2.22}{13}{Thuật toán xác định trọng tâm và định hướng lòng bàn tay}{equation.2.22}{}}
+\newlabel{eq:palm_vectors}{{2.23}{14}{Thuật toán xác định trọng tâm và định hướng lòng bàn tay}{equation.2.23}{}}
+\newlabel{eq:palm_normal}{{2.24}{14}{Thuật toán xác định trọng tâm và định hướng lòng bàn tay}{equation.2.24}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{15}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{chapter:Experiment}{{3}{12}{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc hệ thống và giao thức truyền dữ liệu}{12}{section.3.1}\protected@file@percent }
-\newlabel{section:3.1}{{3.1}{12}{Kiến trúc hệ thống và giao thức truyền dữ liệu}{section.3.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Sơ đồ khối kiến trúc hệ thống tương tác cử chỉ tay thời gian thực}}{12}{figure.caption.8}\protected@file@percent }
-\newlabel{ref:architecture}{{3.1}{12}{Sơ đồ khối kiến trúc hệ thống tương tác cử chỉ tay thời gian thực}{figure.caption.8}{}}
-\newlabel{eq:packet_format}{{3.1}{13}{Kiến trúc hệ thống và giao thức truyền dữ liệu}{equation.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Hiện thực hóa module xử lý Python Backend}{13}{section.3.2}\protected@file@percent }
-\newlabel{section:3.2}{{3.2}{13}{Hiện thực hóa module xử lý Python Backend}{section.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Lập trình tích hợp tương tác 3D trong Unity}{14}{section.3.3}\protected@file@percent }
-\newlabel{section:3.3}{{3.3}{14}{Lập trình tích hợp tương tác 3D trong Unity}{section.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Ứng dụng tương tác vật lý \texttt  {3DHandModel}}{14}{subsection.3.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Giao diện mô phỏng xương bàn tay 3D và hành động cầm nắm vật thể ảo trong Unity}}{15}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:unity_hand_model}{{3.2}{15}{Giao diện mô phỏng xương bàn tay 3D và hành động cầm nắm vật thể ảo trong Unity}{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Ứng dụng trò chơi FruitNinja điều khiển bằng cử chỉ}{15}{subsection.3.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Giao diện trò chơi FruitNinja điều khiển bằng cử chỉ chỉ ngón trỏ (Pointer)}}{16}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:unity_fruit_ninja}{{3.3}{16}{Giao diện trò chơi FruitNinja điều khiển bằng cử chỉ chỉ ngón trỏ (Pointer)}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Đánh giá kết quả thực nghiệm}{16}{section.3.4}\protected@file@percent }
-\newlabel{section:3.4}{{3.4}{16}{Đánh giá kết quả thực nghiệm}{section.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Kết quả huấn luyện và Độ chính xác mô hình học máy}{17}{subsection.3.4.1}\protected@file@percent }
-\newlabel{subsection:3.4.1}{{3.4.1}{17}{Kết quả huấn luyện và Độ chính xác mô hình học máy}{subsection.3.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Ma trận nhầm lẫn của mô hình phân loại cử chỉ tĩnh bằng mạng MLP}}{17}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:static_training_history}{{3.4}{17}{Ma trận nhầm lẫn của mô hình phân loại cử chỉ tĩnh bằng mạng MLP}{figure.caption.11}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}}{18}{table.caption.12}\protected@file@percent }
-\newlabel{tab:static_mlp_report}{{3.1}{18}{Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}{table.caption.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Ma trận nhầm lẫn của thuật toán phân loại cử chỉ tĩnh bằng luật Heuristics}}{18}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:heuristics_confusion_matrix}{{3.5}{18}{Ma trận nhầm lẫn của thuật toán phân loại cử chỉ tĩnh bằng luật Heuristics}{figure.caption.13}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}}{19}{table.caption.14}\protected@file@percent }
-\newlabel{tab:static_heuristics_report}{{3.2}{19}{Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}{table.caption.14}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}}{19}{table.caption.15}\protected@file@percent }
-\newlabel{tab:comparison_static}{{3.3}{19}{Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}{table.caption.15}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Ma trận nhầm lẫn của mô hình phân loại cử chỉ động}}{20}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:dynamic_training_history}{{3.6}{20}{Ma trận nhầm lẫn của mô hình phân loại cử chỉ động}{figure.caption.16}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}}{20}{table.caption.17}\protected@file@percent }
-\newlabel{tab:dynamic_report}{{3.4}{20}{Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}{table.caption.17}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Hiệu năng thời gian thực và Độ trễ hệ thống}{20}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Đánh giá hiệu quả làm mịn của bộ lọc One Euro Filter}{21}{subsection.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{22}{chapter.4}\protected@file@percent }
+\newlabel{chapter:Experiment}{{3}{15}{THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Kiến trúc hệ thống và giao thức truyền dữ liệu}{15}{section.3.1}\protected@file@percent }
+\newlabel{section:3.1}{{3.1}{15}{Kiến trúc hệ thống và giao thức truyền dữ liệu}{section.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Sơ đồ khối kiến trúc hệ thống tương tác cử chỉ tay thời gian thực}}{15}{figure.caption.8}\protected@file@percent }
+\newlabel{ref:architecture}{{3.1}{15}{Sơ đồ khối kiến trúc hệ thống tương tác cử chỉ tay thời gian thực}{figure.caption.8}{}}
+\newlabel{eq:packet_format}{{3.1}{16}{Kiến trúc hệ thống và giao thức truyền dữ liệu}{equation.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Hiện thực hóa module xử lý Python Backend}{16}{section.3.2}\protected@file@percent }
+\newlabel{section:3.2}{{3.2}{16}{Hiện thực hóa module xử lý Python Backend}{section.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Lập trình tích hợp tương tác 3D trong Unity}{17}{section.3.3}\protected@file@percent }
+\newlabel{section:3.3}{{3.3}{17}{Lập trình tích hợp tương tác 3D trong Unity}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Ứng dụng tương tác vật lý \texttt  {3DHandModel}}{17}{subsection.3.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Giao diện mô phỏng xương bàn tay 3D và hành động cầm nắm vật thể ảo trong Unity}}{19}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:unity_hand_model}{{3.2}{19}{Giao diện mô phỏng xương bàn tay 3D và hành động cầm nắm vật thể ảo trong Unity}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Ứng dụng trò chơi FruitNinja điều khiển bằng cử chỉ}{19}{subsection.3.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Giao diện trò chơi FruitNinja điều khiển bằng cử chỉ ngón trỏ (Pointer)}}{20}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:unity_fruit_ninja}{{3.3}{20}{Giao diện trò chơi FruitNinja điều khiển bằng cử chỉ ngón trỏ (Pointer)}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Đánh giá kết quả thực nghiệm}{20}{section.3.4}\protected@file@percent }
+\newlabel{section:3.4}{{3.4}{20}{Đánh giá kết quả thực nghiệm}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Kết quả huấn luyện và Độ chính xác mô hình học máy}{20}{subsection.3.4.1}\protected@file@percent }
+\newlabel{subsection:3.4.1}{{3.4.1}{20}{Kết quả huấn luyện và Độ chính xác mô hình học máy}{subsection.3.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Ma trận nhầm lẫn của mô hình phân loại cử chỉ tĩnh bằng mạng MLP}}{21}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:static_training_history}{{3.4}{21}{Ma trận nhầm lẫn của mô hình phân loại cử chỉ tĩnh bằng mạng MLP}{figure.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}}{21}{table.caption.12}\protected@file@percent }
+\newlabel{tab:static_mlp_report}{{3.1}{21}{Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}{table.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Ma trận nhầm lẫn của thuật toán phân loại cử chỉ tĩnh bằng luật Heuristics}}{22}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:heuristics_confusion_matrix}{{3.5}{22}{Ma trận nhầm lẫn của thuật toán phân loại cử chỉ tĩnh bằng luật Heuristics}{figure.caption.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}}{22}{table.caption.14}\protected@file@percent }
+\newlabel{tab:static_heuristics_report}{{3.2}{22}{Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}{table.caption.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}}{22}{table.caption.15}\protected@file@percent }
+\newlabel{tab:comparison_static}{{3.3}{22}{Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}{table.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Ma trận nhầm lẫn của mô hình phân loại cử chỉ động}}{23}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:dynamic_training_history}{{3.6}{23}{Ma trận nhầm lẫn của mô hình phân loại cử chỉ động}{figure.caption.16}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}}{24}{table.caption.17}\protected@file@percent }
+\newlabel{tab:dynamic_report}{{3.4}{24}{Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}{table.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Hiệu năng thời gian thực và Độ trễ hệ thống}{24}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Đánh giá hiệu quả làm mịn của bộ lọc One Euro Filter}{24}{subsection.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{26}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{chapter:conclusion}{{4}{22}{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Kết luận}{22}{section.4.1}\protected@file@percent }
-\newlabel{section:4.1}{{4.1}{22}{Kết luận}{section.4.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Hướng phát triển}{23}{section.4.2}\protected@file@percent }
-\newlabel{section:4.2}{{4.2}{23}{Hướng phát triển}{section.4.2}{}}
-\@writefile{toc}{\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{25}{section*.19}\protected@file@percent }
+\newlabel{chapter:conclusion}{{4}{26}{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Kết luận}{26}{section.4.1}\protected@file@percent }
+\newlabel{section:4.1}{{4.1}{26}{Kết luận}{section.4.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Hướng phát triển}{27}{section.4.2}\protected@file@percent }
+\newlabel{section:4.2}{{4.2}{27}{Hướng phát triển}{section.4.2}{}}
+\@writefile{toc}{\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{29}{section*.19}\protected@file@percent }
 \ttl@finishall
-\abx@aux@read@bbl@mdfivesum{C0278E8DD0011A3F473333A2E55E852F}
+\abx@aux@read@bbl@mdfivesum{A207D6D36C350306DE96EF089829F06E}
 \abx@aux@defaultrefcontext{0}{ravikiran2013hand}{none/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{opencv_library}{none/global//global/global/global}
 \abx@aux@defaultrefcontext{0}{lugaresi2019mediapipe}{none/global//global/global/global}
@@ -161,4 +173,4 @@
 \abx@aux@defaultlabelprefix{0}{unity3d}{}
 \abx@aux@defaultlabelprefix{0}{rfc768udp}{}
 \abx@aux@defaultlabelprefix{0}{casiez2012one}{}
-\gdef \@abspage@last{32}
+\gdef \@abspage@last{36}

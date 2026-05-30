@@ -14,24 +14,27 @@
 \contentsline {section}{\numberline {2.1}Tiền xử lý ảnh trực tuyến với OpenCV}{5}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Trích xuất khớp tay dựa trên học sâu bằng MediaPipe Hands}{5}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Nhận dạng cử chỉ tay bằng Học máy và Heuristics}{6}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Phương pháp nhận dạng cử chỉ bằng luật hình học (Heuristics)}{6}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Mô hình toán chuẩn hóa tọa độ đặc trưng}{7}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{8}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{8}{subsection.2.3.4}%
-\contentsline {section}{\numberline {2.4}Giao thức truyền dữ liệu UDP thời gian thực}{10}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Toán học của bộ lọc thích nghi chống rung One Euro Filter}{10}{section.2.5}%
-\contentsline {chapter}{\numberline {3}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{12}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Kiến trúc hệ thống và giao thức truyền dữ liệu}{12}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Hiện thực hóa module xử lý Python Backend}{13}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Lập trình tích hợp tương tác 3D trong Unity}{14}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Ứng dụng tương tác vật lý \texttt {3DHandModel}}{14}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Ứng dụng trò chơi FruitNinja điều khiển bằng cử chỉ}{15}{subsection.3.3.2}%
-\contentsline {section}{\numberline {3.4}Đánh giá kết quả thực nghiệm}{16}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Kết quả huấn luyện và Độ chính xác mô hình học máy}{17}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Hiệu năng thời gian thực và Độ trễ hệ thống}{20}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Đánh giá hiệu quả làm mịn của bộ lọc One Euro Filter}{21}{subsection.3.4.3}%
-\contentsline {chapter}{\numberline {4}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{22}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Kết luận}{22}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Hướng phát triển}{23}{section.4.2}%
-\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{25}{section*.19}%
+\contentsline {subsection}{\numberline {2.3.1}Thuật toán luật hình học Heuristics}{6}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Mô hình toán chuẩn hóa tọa độ đặc trưng}{8}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Nhận dạng cử chỉ tĩnh bằng mạng nơ-ron truyền thẳng (MLP)}{9}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}{10}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Giao thức truyền dữ liệu UDP thời gian thực}{11}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Toán học của bộ lọc thích nghi chống rung One Euro Filter}{11}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Các thuật toán hình học mô phỏng 3D trong Unity}{12}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Thuật toán khuếch đại tầm với thích nghi (Reach Remap)}{12}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Thuật toán xác định trọng tâm và định hướng lòng bàn tay}{13}{subsection.2.6.2}%
+\contentsline {chapter}{\numberline {3}THỰC NGHIỆM VÀ ĐÁNH GIÁ KẾT QUẢ}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Kiến trúc hệ thống và giao thức truyền dữ liệu}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Hiện thực hóa module xử lý Python Backend}{16}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Lập trình tích hợp tương tác 3D trong Unity}{17}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Ứng dụng tương tác vật lý \texttt {3DHandModel}}{17}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Ứng dụng trò chơi FruitNinja điều khiển bằng cử chỉ}{19}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Đánh giá kết quả thực nghiệm}{20}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Kết quả huấn luyện và Độ chính xác mô hình học máy}{20}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Hiệu năng thời gian thực và Độ trễ hệ thống}{24}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Đánh giá hiệu quả làm mịn của bộ lọc One Euro Filter}{24}{subsection.3.4.3}%
+\contentsline {chapter}{\numberline {4}KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}{26}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Kết luận}{26}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Hướng phát triển}{27}{section.4.2}%
+\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{29}{section*.19}%
 \contentsfinish 
