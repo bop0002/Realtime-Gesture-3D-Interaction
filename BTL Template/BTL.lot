@@ -1,10 +1,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}}{18}{table.caption.12}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}}{19}{table.caption.14}%
-\contentsline {table}{\numberline {3.3}{\ignorespaces Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}}{19}{table.caption.15}%
-\contentsline {table}{\numberline {3.4}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}}{20}{table.caption.17}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ tĩnh MLP}}{21}{table.caption.12}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của thuật toán hình học Heuristics}}{22}{table.caption.14}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Bảng so sánh hiệu năng giữa mô hình học máy MLP và thuật toán hình học Heuristics}}{22}{table.caption.15}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces Báo cáo kết quả phân loại chi tiết (Classification Report) của mô hình cử chỉ động}}{24}{table.caption.17}%
 \addvspace {10\p@ }
 \contentsfinish 
 \contentsfinish 
