@@ -72,6 +72,13 @@ public class HandTracking : MonoBehaviour
     private Collider[] _pointColliders;
     private bool _hasFreshTarget;
 
+    // Renderer của debug visuals (sphere Points + Lines). Tắt debug = tắt renderer này
+    // chứ KHÔNG SetActive(false) cả debugHand — nếu deactivate, Points (con của debugHand)
+    // ngừng simulate physics (MovePosition) → model đứng yên. Giữ active, chỉ ẩn renderer.
+    private Renderer[] _debugRenderers;
+    private bool _debugVisible;
+    private bool _debugVisibleInit;
+
     private void Start()
     {
         for(int i =0;i<bones.Length;i++)
@@ -86,6 +93,29 @@ public class HandTracking : MonoBehaviour
         }
 
         if (enableHandPhysics) SetupHandPhysics();
+
+        // debugHand phải luôn active vì Points (con của nó) cần active để simulate physics & drive model.
+        // Việc ẩn/hiện debug giờ làm qua Renderer.enabled, không phải SetActive.
+        if (debugHand != null)
+        {
+            debugHand.SetActive(true);
+            _debugRenderers = debugHand.GetComponentsInChildren<Renderer>(true);
+        }
+        ApplyDebugVisible(IsDebug);
+    }
+
+    /// <summary>
+    /// Bật/tắt HIỂN THỊ debug (sphere + line) mà vẫn giữ debugHand active để Points tiếp tục
+    /// được drive (physics/transform) → model luôn hoạt động dù tắt debug. Chỉ chạy khi đổi trạng thái.
+    /// </summary>
+    private void ApplyDebugVisible(bool on)
+    {
+        if (_debugVisibleInit && _debugVisible == on) return;
+        _debugVisible = on;
+        _debugVisibleInit = true;
+        if (_debugRenderers == null) return;
+        for (int i = 0; i < _debugRenderers.Length; i++)
+            if (_debugRenderers[i] != null) _debugRenderers[i].enabled = on;
     }
 
     private void SetupHandPhysics()
@@ -138,7 +168,7 @@ public class HandTracking : MonoBehaviour
 
     private void Update()
     {
-        debugHand.SetActive(IsDebug);
+        ApplyDebugVisible(IsDebug);
 
         string data= udpReceive.data;
         if(string.IsNullOrEmpty(data) || data.Length < 2 || data[0]!='[') return;

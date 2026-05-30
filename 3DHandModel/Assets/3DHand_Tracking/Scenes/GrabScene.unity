@@ -1042,7 +1042,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.34390292, y: 0.0036710957, z: -0.0013445202, w: 0.9389971}
-  m_LocalPosition: {x: 0.83, y: 17.95, z: -18}
+  m_LocalPosition: {x: 3.34, y: 17.95, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2796,7 +2796,7 @@ MonoBehaviour:
   - {fileID: 1957741058}
   - {fileID: 1204778259}
   - {fileID: 1633117049}
-  IsDebug: 1
+  IsDebug: 0
   debugHand: {fileID: 1023900716}
   coordinateDivisor: 45
   enableReachRemap: 1
