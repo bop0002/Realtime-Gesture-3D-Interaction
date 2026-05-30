@@ -10,7 +10,7 @@ public class HandTracking : MonoBehaviour
 
     [Header("World Scale")]
     [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Khi bật Reach Remap, trường này CHỈ còn quy định KÍCH THƯỚC bàn tay (offset mỗi điểm so với cổ tay), không còn ảnh hưởng tầm với. Càng nhỏ tay càng to.")]
-    [SerializeField] private float coordinateDivisor = 75f;
+    [SerializeField] private float coordinateDivisor = 45f;
 
     [Header("Reach Remap (Gain)")]
     [Tooltip("Tách tầm với khỏi kích thước tay: ánh xạ vị trí cổ tay (chuẩn hoá 0..1 theo khung hình) vào vùng world rộng reachRange quanh reachCenter. Cho tay với tới toàn playground mà không cần khua nhiều. Tắt để về hành vi map 1:1 cũ.")]
