@@ -15,7 +15,7 @@ Trước khi đưa vào mô hình học sâu để xử lý, ảnh thô cần tr
 Sau khi tiền xử lý ảnh đầu vào, hệ thống trích xuất đặc trưng khớp bàn tay bằng thư viện MediaPipe Hands của Google \cite{lugaresi2019mediapipe}. Đây là giải pháp học sâu tích hợp sẵn, bao gồm hai mô hình mạng nơ-ron hoạt động nối tiếp nhau:
 \begin{enumerate}
     \item \textbf{Mạng phát hiện bàn tay (Hand Detector Model):} Sử dụng kiến trúc Single Shot Detector (SSD) được tối ưu hóa cho các thiết bị di động để nhanh chóng phát hiện vùng chứa bàn tay trong toàn bộ khung hình ảnh và xuất ra một khung bao giới hạn (bounding box).
-    \item \textbf{Mạng hồi quy điểm mốc bàn tay (Hand Landmark Model):} Chạy trên vùng ảnh bàn tay đã được cắt ra từ mô hình phát hiện để dự đoán tọa độ 3D tương đối của 21 điểm mốc khớp bàn tay (landmarks). Sơ đồ 21 điểm mốc này được biểu diễn trong Hình \ref{fig:mediapipe_landmarks}.
+    \item \textbf{Điểm mốc bàn tay (Hand Landmark Model):} Chạy trên vùng ảnh bàn tay đã được cắt ra từ mô hình phát hiện để dự đoán tọa độ 3D tương đối của 21 điểm mốc khớp bàn tay (landmarks). Sơ đồ 21 điểm mốc này được biểu diễn trong Hình \ref{fig:mediapipe_landmarks}.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -50,7 +50,7 @@ State(f) =
 \end{equation}
 Trong đó $P_0$ là tọa độ điểm cổ tay (Wrist - landmark 0).
 
-Đối với ngón cái (Thumb), do cấu trúc giải phẫu chuyển động khác biệt, hệ thống sử dụng một khoảng cách tham chiếu tĩnh từ gốc ngón trỏ đến gốc ngón út nhằm loại bỏ sai số co giãn khi tay tiến lại gần hoặc ra xa camera. Trạng thái ngón cái được đánh giá bằng cách so sánh khoảng cách giữa đầu ngón cái $P_4$ (landmark 4) với gốc ngón út $P_{17}$ (landmark 17) so với khoảng cách tham chiếu giữa gốc ngón trỏ $P_5$ (landmark 5) và gốc ngón út $P_{17}$:
+Đối với ngón cái (Thumb), do cấu trúc giải phẫu chuyển động khác biệt, hệ thống sử dụng một khoảng cách tham chiếu tĩnh từ gốc ngón trỏ đến gốc ngón út nhằm loại bỏ sai số co giãn khi tay tiến lại gần hoặc ra xa camera. Trạng thái ngón cái được đánh giá bằng cách so sánh khoảng cách giữa đầu ngón cái $P_4$ (landmark 4) với gốc ngón út $P_{17}$ (landmark 17) so với khoảng cách tham chiếu giữa gốc ngón trỏ $P_5$ (landmark 5) và gốc ngón út $P_{17}$ theo phương trình \eqref{eq:thumb_state}:
 \begin{equation}
 \label{eq:thumb_state}
 State(\text{cái}) = 
@@ -60,7 +60,7 @@ State(\text{cái}) =
 \end{cases}
 \end{equation}
 
-Tập hợp trạng thái của 5 ngón tay được biểu diễn dưới dạng một vectơ nhị phân $S$:
+Tập hợp trạng thái của 5 ngón tay được biểu diễn dưới dạng một vectơ nhị phân $S$ theo công thức \eqref{eq:state_vector}:
 \begin{equation}
 \label{eq:state_vector}
 S = [State(\text{cái}), State(\text{trỏ}), State(\text{giữa}), State(\text{áp út}), State(\text{út})]
@@ -74,7 +74,7 @@ Dựa vào vectơ này, hệ thống ánh xạ ra các cử chỉ tĩnh cơ bả
     \item \textbf{Cử chỉ ThumbsUp (Like):} Chỉ ngón cái duỗi, các ngón khác co, tương ứng với vectơ trạng thái $S = [1, 0, 0, 0, 0]$.
 \end{itemize}
 
-Riêng đối với cử chỉ phức tạp \textbf{OK}, do ngón trỏ uốn cong để chạm vào ngón cái trong khi các ngón còn lại duỗi, vectơ trạng thái nhị phân thô dễ bị nhầm lẫn. Để tăng độ chính xác, hệ thống tính toán khoảng cách chuẩn hóa độc lập. Đầu tiên, chiều dài lòng bàn tay tham chiếu được xác định qua khoảng cách giữa cổ tay $P_0$ và gốc ngón giữa $P_9$: $palm\_len = d(P_0, P_9)$. Cử chỉ OK được kích hoạt khi ngón giữa duỗi ($State(\text{giữa}) = 1$) đồng thời khoảng cách giữa đầu ngón cái $P_4$ và đầu ngón trỏ $P_8$ nhỏ hơn ngưỡng tỉ lệ $40\%$ chiều dài lòng bàn tay:
+Riêng đối với cử chỉ phức tạp \textbf{OK}, do ngón trỏ uốn cong để chạm vào ngón cái trong khi các ngón còn lại duỗi, vectơ trạng thái nhị phân thô dễ bị nhầm lẫn. Để tăng độ chính xác, hệ thống tính toán khoảng cách chuẩn hóa độc lập. Đầu tiên, chiều dài lòng bàn tay tham chiếu được xác định qua khoảng cách giữa cổ tay $P_0$ và gốc ngón giữa $P_9$: $palm\_len = d(P_0, P_9)$. Cử chỉ OK được kích hoạt khi ngón giữa duỗi ($State(\text{giữa}) = 1$) đồng thời khoảng cách giữa đầu ngón cái $P_4$ và đầu ngón trỏ $P_8$ nhỏ hơn ngưỡng tỉ lệ $40\%$ chiều dài lòng bàn tay, được xác định qua điều kiện \eqref{eq:ok_heuristic}:
 \begin{equation}
 \label{eq:ok_heuristic}
 Class = \text{OK} \quad \text{nếu} \quad State(\text{giữa}) == 1 \quad \text{và} \quad d(P_4, P_8) < 0.4 \times d(P_0, P_9)
@@ -124,7 +124,7 @@ Mô hình được huấn luyện bằng cách tối ưu hóa hàm mất mát en
 \label{eq:cross_entropy_loss}
 \mathcal{L} = -\log(P(class = y_{true} | V''))
 \end{equation}
-Trong đó $y_{true}$ là chỉ số nhãn thực tế của lớp cử chỉ. Sau khi huấn luyện và lựa chọn bộ trọng số có kết quả tốt trên tập kiểm chứng, mô hình được xuất và chuyển đổi sang định dạng TensorFlow Lite (.tflite). Định dạng TensorFlow Lite (.tflite) giúp mô hình thuận tiện hơn cho quá trình triển khai và suy luận trong các ứng dụng thời gian thực, đồng thời có thể hỗ trợ các kỹ thuật tối ưu hóa dung lượng và tốc độ thực thi trên CPU phổ thông.
+Trong đó $y_{true}$ là chỉ số nhãn thực tế của lớp cử chỉ. Sau khi huấn luyện và lựa chọn bộ trọng số có kết quả tốt trên tập kiểm chứng, mô hình được xuất và chuyển đổi sang định dạng TensorFlow Lite (.tflite) \cite{tflite2017}. Định dạng TensorFlow Lite (.tflite) giúp mô hình thuận tiện hơn cho quá trình triển khai và suy luận trong các ứng dụng thời gian thực, đồng thời có thể hỗ trợ các kỹ thuật tối ưu hóa dung lượng và tốc độ thực thi trên CPU phổ thông.
 
 \subsection{Nhận dạng cử chỉ động dựa trên quỹ đạo chuyển động}
 Nhận dạng cử chỉ động bao gồm các động tác vuốt tay Swipe, vẽ các hình hình học Circle, Triangle, Z-shape đòi hỏi hệ thống phải nắm bắt được thông tin chuyển động theo trục thời gian liên tiếp. Để thực hiện điều này, hệ thống lưu trữ lịch sử tọa độ không gian của điểm đầu ngón tay trỏ (landmark số 8) trong một hàng đợi FIFO (First-In, First-Out) có kích thước cố định $N = 32$ khung hình gần nhất. 
