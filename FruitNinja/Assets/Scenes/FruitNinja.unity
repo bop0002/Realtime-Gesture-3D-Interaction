@@ -623,7 +623,7 @@ MonoBehaviour:
   minSliceVelocity: 0.01
   handInput: {fileID: 1098069340}
   activateGesture: Pointer
-  useMouse: 1
+  useMouse: 0
   dropTolerance: 0.1
 --- !u!135 &835024515
 SphereCollider:
@@ -875,7 +875,7 @@ MonoBehaviour:
   oneEuroDCutoff: 1
   positionSmoothing: 0
   lostHandTimeout: 0.2
-  gestureSource: 1
+  gestureSource: 0
   debugLogRange: 0
 --- !u!114 &1098069341
 MonoBehaviour:
