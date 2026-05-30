@@ -15,7 +15,7 @@ Trước khi đưa vào mô hình học sâu để xử lý, ảnh thô cần tr
 Sau khi tiền xử lý ảnh đầu vào, hệ thống trích xuất đặc trưng khớp bàn tay bằng thư viện MediaPipe Hands của Google \cite{lugaresi2019mediapipe}. Đây là giải pháp học sâu tích hợp sẵn, bao gồm hai mô hình mạng nơ-ron hoạt động nối tiếp nhau:
 \begin{enumerate}
     \item \textbf{Mạng phát hiện bàn tay (Hand Detector Model):} Sử dụng kiến trúc Single Shot Detector (SSD) được tối ưu hóa cho các thiết bị di động để nhanh chóng phát hiện vùng chứa bàn tay trong toàn bộ khung hình ảnh và xuất ra một khung bao giới hạn (bounding box).
-    \item \textbf{Mạng hồi quy điểm mốc bàn tay (Hand Landmark Model):} Chạy trên vùng ảnh bàn tay đã được cắt ra từ mô hình phát hiện để dự đoán tọa độ 3D tương đối của 21 điểm mốc khớp bàn tay (landmarks). Sơ đồ 21 điểm mốc này được biểu diễn trong Hình \ref{fig:mediapipe_landmarks}.
+    \item \textbf{Điểm mốc bàn tay (Hand Landmark Model):} Chạy trên vùng ảnh bàn tay đã được cắt ra từ mô hình phát hiện để dự đoán tọa độ 3D tương đối của 21 điểm mốc khớp bàn tay (landmarks). Sơ đồ 21 điểm mốc này được biểu diễn trong Hình \ref{fig:mediapipe_landmarks}.
 \end{enumerate}
 
 \begin{figure}[H]
