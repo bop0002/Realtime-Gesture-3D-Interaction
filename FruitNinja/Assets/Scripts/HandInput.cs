@@ -1,13 +1,4 @@
 using UnityEngine;
-
-/// <summary>
-/// Đọc dữ liệu UDP từ Python (MediaPipe) và quy ra vị trí màn hình của
-/// đầu ngón trỏ (landmark point 8) để Blade bám theo.
-///
-/// Protocol giống 3DHandModel: chuỗi "[x0,y0,z0, ... x20,y20,z20, 'Gesture']".
-/// x,y là pixel trong frame camera (y đã được flip lên trên ở phía Python),
-/// nên ta normalize theo độ phân giải camera rồi scale ra Screen.width/height.
-/// </summary>
 public class HandInput : MonoBehaviour
 {
     [SerializeField] private UDPReceive udpReceive;
@@ -17,7 +8,6 @@ public class HandInput : MonoBehaviour
     [SerializeField] private int controlPointIndex = 8;
 
     [Header("Camera Resolution (fallback)")]
-    [Tooltip("Chỉ dùng khi Python KHÔNG gửi kèm kích thước frame. Bản test.py mới đã gửi width/height thật nên 2 giá trị này thường bị override tự động.")]
     [SerializeField] private float cameraWidth = 960f;
     [SerializeField] private float cameraHeight = 540f;
 
@@ -47,10 +37,10 @@ public class HandInput : MonoBehaviour
 
     public enum GestureSource
     {
-        Model,        // chỉ dùng output từ TFLite model (như trước)
+        Model,        // chỉ dùng output từ model
         Rule,         // chỉ dùng rule-based đếm ngón từ Python
         EitherMatch,  // ưu tiên Model; nếu Model = None thì lấy Rule
-        BothMatch,    // chỉ cho gesture khi Model == Rule (chống false-positive)
+        BothMatch,    // chỉ cho gesture khi Model == Rule
     }
 
     [Header("Gesture Source")]
@@ -63,25 +53,19 @@ public class HandInput : MonoBehaviour
 
     private const int HandPoints = 21;
 
-    /// <summary>Có đang nhận được tay hợp lệ không.</summary>
     public bool HandVisible { get; private set; }
 
-    /// <summary>Vị trí màn hình (pixel) của control point, đã smooth.</summary>
     public Vector3 ScreenPosition { get; private set; }
 
-    /// <summary>Gesture từ TFLite model phía Python.</summary>
     public string ModelGesture { get; private set; } = "None";
 
-    /// <summary>Gesture rule-based đếm ngón từ Python (Open/Close/Pointer/Peace). "None" nếu payload không có.</summary>
     public string RuleGesture { get; private set; } = "None";
 
-    /// <summary>Gesture cuối cùng theo gestureSource — Blade/PauseMenu đọc trường này.</summary>
     public string CurrentGesture { get; private set; } = "None";
 
     private float lastValidTime = -999f;
     private bool hasSmoothed;
 
-    // Debug: theo dõi khoảng nx/ny tay thực sự quét tới.
     private float dbgMinNx = 1f, dbgMaxNx = 0f, dbgMinNy = 1f, dbgMaxNy = 0f;
 
     private readonly OneEuroFilter filterX = new OneEuroFilter();
@@ -223,10 +207,6 @@ public class HandInput : MonoBehaviour
             Debug.Log($"[HandInput] frame={w}x{h} | nx[{dbgMinNx:F2}..{dbgMaxNx:F2}] ny[{dbgMinNy:F2}..{dbgMaxNy:F2}]");
     }
 
-    /// <summary>
-    /// One Euro Filter (Casiez et al. 2012) cho 1 trục: lọc thích nghi theo tốc độ.
-    /// Tốc độ thấp -> cutoff thấp -> mượt; tốc độ cao -> cutoff cao -> ít trễ.
-    /// </summary>
     private class OneEuroFilter
     {
         private bool initialized;

@@ -6,13 +6,10 @@ public class Blade : MonoBehaviour
     public float minSliceVelocity = 0.01f;
 
     [Header("Input")]
-    [Tooltip("Nguồn điều khiển bằng tay (UDP/MediaPipe). Để trống thì chỉ dùng chuột.")]
+    [Tooltip("Nguồn điều khiển bằng tay (UDP/MediaPipe)")]
     [SerializeField] private HandInput handInput;
-    [Tooltip("Chỉ kích hoạt blade khi gesture này đang bật (vd 'Pointer'). Để trống = luôn kích hoạt khi thấy tay.")]
     [SerializeField] private string activateGesture = "Pointer";
-    [Tooltip("Cho phép điều khiển bằng chuột song song (tiện debug khi chưa chạy camera).")]
     [SerializeField] private bool useMouse = true;
-    [Tooltip("Khi mất tín hiệu gesture đột ngột (chập chờn rule-based), giữ trạng thái slicing thêm bấy nhiêu giây trước khi thực sự StopSlice. 0.05–0.15s là vùng tốt; cao hơn dễ chém oan.")]
     [SerializeField] private float dropTolerance = 0.1f;
 
     private Camera mainCamera;
@@ -56,8 +53,6 @@ public class Blade : MonoBehaviour
             else            ContinueSlice(screenPos);
             wasActive = true;
         } else if (wasActive) {
-            // Tay/gesture biến mất tạm thời: giữ slicing, không reset trail/collider.
-            // Blade đứng yên ở vị trí cuối; ContinueSlice không gọi nên direction không đổi.
             dropTimer += Time.deltaTime;
             if (dropTimer >= dropTolerance) {
                 StopSlice();
@@ -67,7 +62,6 @@ public class Blade : MonoBehaviour
         }
     }
 
-    // Ưu tiên tay khi đang thấy tay; nếu không thì rơi về chuột (nếu bật).
     private bool TryGetInput(out Vector3 screenPos)
     {
         if (handInput != null && handInput.HandVisible) {

@@ -22,21 +22,17 @@ public class Fruit : MonoBehaviour
     {
         GameManager.Instance.IncreaseScore(points);
 
-        // Disable the whole fruit
         fruitCollider.enabled = false;
         whole.SetActive(false);
 
-        // Enable the sliced fruit
         sliced.SetActive(true);
         juiceEffect.Play();
 
-        // Rotate based on the slice angle
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         sliced.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         Rigidbody[] slices = sliced.GetComponentsInChildren<Rigidbody>();
 
-        // Add a force to each slice based on the blade direction
         foreach (Rigidbody slice in slices)
         {
             slice.linearVelocity = fruitRigidbody.linearVelocity;
