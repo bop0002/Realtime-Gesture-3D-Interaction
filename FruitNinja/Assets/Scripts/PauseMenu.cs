@@ -1,13 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Pause menu điều khiển bằng gesture:
-/// - Giữ gesture "Open" (custom được) trong dwellTimeToPause giây -> Pause.
-/// - Khi pause: cursor bám đầu ngón trỏ (gesture "Pointer"); giữ cursor trên
-///   1 button trong dwellTimeToClick giây -> invoke onClick.
-/// - Resume / Restart đều có thể click bằng chuột (debug) hoặc bằng tay.
-/// </summary>
 public class PauseMenu : MonoBehaviour
 {
     [Header("Refs")]
@@ -17,21 +10,16 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameManager gameManager;
 
     [Header("UI")]
-    [Tooltip("Panel cha chứa các nút Resume / Restart. Ẩn mặc định, bật khi pause.")]
     [SerializeField] private GameObject pauseMenuPanel;
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button restartButton;
-    [Tooltip("Image (RectTransform) đại diện cho cursor tay. Chỉ hiện khi đang pause và gesture = cursorGesture.")]
     [SerializeField] private RectTransform handCursor;
 
     [Header("Gesture")]
-    [Tooltip("Gesture để mở pause menu khi đang chơi.")]
     [SerializeField] private string pauseGesture = "Open";
-    [Tooltip("Gesture để di chuyển cursor + click button trong menu.")]
     [SerializeField] private string cursorGesture = "Pointer";
     [Tooltip("Phải GIỮ pauseGesture liên tục bao nhiêu giây thì mới pause (chống false-trigger khi vung tay).")]
     [SerializeField] private float dwellTimeToPause = 0.5f;
-    [Tooltip("Phải GIỮ cursor đứng yên trên 1 button bao nhiêu giây thì kích hoạt nút.")]
     [SerializeField] private float dwellTimeToClick = 0.4f;
 
     public bool IsPaused { get; private set; }

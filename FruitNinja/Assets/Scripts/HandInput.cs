@@ -4,27 +4,22 @@ public class HandInput : MonoBehaviour
     [SerializeField] private UDPReceive udpReceive;
 
     [Header("Landmark")]
-    [Tooltip("Index của landmark dùng để điều khiển blade. 8 = đầu ngón trỏ (Pointer).")]
     [SerializeField] private int controlPointIndex = 8;
 
     [Header("Camera Resolution (fallback)")]
-    [SerializeField] private float cameraWidth = 640;
-    [SerializeField] private float cameraHeight = 480;
+    [SerializeField] private float cameraWidth = 960;
+    [SerializeField] private float cameraHeight = 540;
 
     [Header("Active Region (normalized 0..1)")]
-    [Tooltip("Khoảng X (theo tỉ lệ khung hình) mà đầu ngón TỚI ĐƯỢC sẽ trải FULL màn ngang. Vd nếu tay chỉ quét tới 0.65 bên phải, đặt Max=0.65. Bật Debug Log Range để biết khoảng thực tế.")]
     [SerializeField] private Vector2 inputRangeX = new Vector2(0f, 1f);
-    [Tooltip("Tương tự cho trục Y (dọc).")]
     [SerializeField] private Vector2 inputRangeY = new Vector2(0f, 1f);
 
     [Header("One Euro Filter (chống jitter)")]
-    [Tooltip("Bật bộ lọc thích nghi: tay đứng yên lọc mạnh (hết rung), vung nhanh lọc nhẹ (ít trễ).")]
     [SerializeField] private bool useOneEuro = true;
-    [Tooltip("Càng THẤP càng mượt khi tay gần đứng yên (diệt jitter) nhưng trễ hơn. Thử 0.5–2.0.")]
+    [Tooltip("Low = smooth no jittering when still")]
     [SerializeField] private float oneEuroMinCutoff = 1.0f;
-    [Tooltip("Càng CAO càng nhạy / ít trễ khi vung nhanh. Tăng nếu thấy lưỡi dao trễ lúc chém.")]
+    [Tooltip("High = low latency when move fast")]
     [SerializeField] private float oneEuroBeta = 0.4f;
-    [Tooltip("Cutoff cho đạo hàm tốc độ. Thường để 1.0.")]
     [SerializeField] private float oneEuroDCutoff = 1.0f;
 
     [Header("Mapping")]
@@ -37,18 +32,16 @@ public class HandInput : MonoBehaviour
 
     public enum GestureSource
     {
-        Model,        // chỉ dùng output từ model
-        Rule,         // chỉ dùng rule-based đếm ngón từ Python
-        EitherMatch,  // ưu tiên Model; nếu Model = None thì lấy Rule
-        BothMatch,    // chỉ cho gesture khi Model == Rule
+        Model,        
+        Rule,         
+        EitherMatch,  
+        BothMatch,    
     }
 
     [Header("Gesture Source")]
-    [Tooltip("Chọn nguồn gesture dùng cho CurrentGesture. Blade/PauseMenu đang đọc CurrentGesture nên dùng Model giữ hành vi cũ; BothMatch chắc tay hơn cho gesture 'Open' (pause).")]
     [SerializeField] private GestureSource gestureSource = GestureSource.Model;
 
     [Header("Debug")]
-    [Tooltip("Log khoảng nx/ny thực tế tay quét tới (min/max) để hiệu chỉnh Active Region.")]
     [SerializeField] private bool debugLogRange = false;
 
     private const int HandPoints = 21;
@@ -146,9 +139,9 @@ public class HandInput : MonoBehaviour
         if (!float.TryParse(parts[idx * 3], out float px)) return false;
         if (!float.TryParse(parts[idx * 3 + 1], out float py)) return false;
 
-        float w = cameraWidth > 0.0001f ? cameraWidth : 640;
-        float h = cameraHeight > 0.0001f ? cameraHeight : 480;
-        int dimBase = HandPoints * 3 + 1; // bỏ qua gesture
+        float w = cameraWidth > 0.0001f ? cameraWidth : 960;
+        float h = cameraHeight > 0.0001f ? cameraHeight : 540;
+        int dimBase = HandPoints * 3 + 1;
         if (parts.Length >= dimBase + 2)
         {
             if (float.TryParse(parts[dimBase], out float fw) && fw > 1f) w = fw;
@@ -159,7 +152,7 @@ public class HandInput : MonoBehaviour
         float nx = px / w;
         float ny = py / h;
 
-        // One Euro Filter trên toạ độ chuẩn hoá (resolution-independent).
+        // One Euro Filter
         if (useOneEuro)
         {
             float t = Time.time;
@@ -185,7 +178,6 @@ public class HandInput : MonoBehaviour
         return true;
     }
 
-    // Map khoảng [range.x, range.y] -> [0,1], clamp để không tràn ngoài màn hình.
     private static float Remap(Vector2 range, float v)
     {
         float a = range.x, b = range.y;
@@ -228,12 +220,10 @@ public class HandInput : MonoBehaviour
             if (dt <= 0f) dt = 1f / 60f;
             tPrev = t;
 
-            // Lowpass đạo hàm để ước lượng tốc độ ổn định.
             float dx = (x - xPrev) / dt;
             float edx = Mathf.Lerp(dxPrev, dx, Alpha(dCutoff, dt));
             dxPrev = edx;
 
-            // Cutoff thích nghi theo tốc độ.
             float cutoff = minCutoff + beta * Mathf.Abs(edx);
             float xFiltered = Mathf.Lerp(xPrev, x, Alpha(cutoff, dt));
             xPrev = xFiltered;

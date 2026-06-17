@@ -865,10 +865,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandInput
   udpReceive: {fileID: 1098069341}
   controlPointIndex: 8
-  cameraWidth: 960
-  cameraHeight: 540
+  cameraWidth: 640
+  cameraHeight: 480
   inputRangeX: {x: 0, y: 1}
-  inputRangeY: {x: 0, y: 1}
+  inputRangeY: {x: 0.25, y: 0.75}
   useOneEuro: 1
   oneEuroMinCutoff: 1
   oneEuroBeta: 0.4

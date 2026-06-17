@@ -6,7 +6,6 @@ public class Blade : MonoBehaviour
     public float minSliceVelocity = 0.01f;
 
     [Header("Input")]
-    [Tooltip("Nguồn điều khiển bằng tay (UDP/MediaPipe)")]
     [SerializeField] private HandInput handInput;
     [SerializeField] private string activateGesture = "Pointer";
     [SerializeField] private bool useMouse = true;
