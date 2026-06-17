@@ -5,8 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-// Nhận landmark bàn tay từ Python (MediaPipe) qua UDP. Copy nguyên từ 3DHandModel
-// để FruitNinja dùng chung protocol/port 5026 — không cần đổi gì phía Python.
+
 public class UDPReceive : MonoBehaviour
 {
 
@@ -15,10 +14,8 @@ public class UDPReceive : MonoBehaviour
     public int port = 5026;
     public bool startRecieving = true;
     public bool printToConsole = false;
-    [Tooltip("Log chỉ field gesture (model | rule) thay vì cả chuỗi landmark — tiện debug rule-based.")]
     public bool printGestureToConsole = false;
     public string data;
-    [Tooltip("Gesture parse được từ payload gần nhất, dạng 'model=X | rule=Y'. Cập nhật mỗi packet UDP.")]
     public string gesture;
 
 
@@ -61,8 +58,6 @@ public class UDPReceive : MonoBehaviour
         }
     }
 
-    // Lấy nhanh model_gesture (index 63) và rule_gesture (index 66) từ payload thô,
-    // không cần Update / parse landmark. Trả "model=X | rule=Y" hoặc "(no data)".
     private static string ExtractGesture(string raw)
     {
         if (string.IsNullOrEmpty(raw) || raw.Length < 2 || raw[0] != '[') return "(no data)";

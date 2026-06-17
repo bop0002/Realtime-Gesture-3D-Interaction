@@ -18,7 +18,6 @@ public class PauseMenu : MonoBehaviour
     [Header("Gesture")]
     [SerializeField] private string pauseGesture = "Open";
     [SerializeField] private string cursorGesture = "Pointer";
-    [Tooltip("Phải GIỮ pauseGesture liên tục bao nhiêu giây thì mới pause (chống false-trigger khi vung tay).")]
     [SerializeField] private float dwellTimeToPause = 0.5f;
     [SerializeField] private float dwellTimeToClick = 0.4f;
 

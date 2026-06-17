@@ -23,7 +23,6 @@ public class HandInput : MonoBehaviour
     [SerializeField] private float oneEuroDCutoff = 1.0f;
 
     [Header("Mapping")]
-    [Tooltip("Làm mượt vị trí bổ sung (0 = tắt). Thường để 0 khi đã dùng One Euro Filter.")]
     [Range(0f, 1f)][SerializeField] private float positionSmoothing = 0f;
 
     [Header("Detection")]
@@ -162,7 +161,6 @@ public class HandInput : MonoBehaviour
 
         if (debugLogRange) TrackRange(nx, ny, w, h);
 
-        // Trải khoảng input thực tế (Active Region) ra full màn hình.
         float mx = Remap(inputRangeX, nx);
         float my = Remap(inputRangeY, ny);
 
@@ -171,7 +169,6 @@ public class HandInput : MonoBehaviour
         if (parts.Length > HandPoints * 3)
             gesture = parts[HandPoints * 3].Trim(' ', '\'', '"');
 
-        // Rule gesture nằm sau width/height (index dimBase+2 = 66). Backward-compatible.
         if (parts.Length > dimBase + 2)
             ruleGesture = parts[dimBase + 2].Trim(' ', '\'', '"');
 
