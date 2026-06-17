@@ -8,8 +8,8 @@ public class HandInput : MonoBehaviour
     [SerializeField] private int controlPointIndex = 8;
 
     [Header("Camera Resolution (fallback)")]
-    [SerializeField] private float cameraWidth = 960f;
-    [SerializeField] private float cameraHeight = 540f;
+    [SerializeField] private float cameraWidth = 640;
+    [SerializeField] private float cameraHeight = 480;
 
     [Header("Active Region (normalized 0..1)")]
     [Tooltip("Khoảng X (theo tỉ lệ khung hình) mà đầu ngón TỚI ĐƯỢC sẽ trải FULL màn ngang. Vd nếu tay chỉ quét tới 0.65 bên phải, đặt Max=0.65. Bật Debug Log Range để biết khoảng thực tế.")]
@@ -138,7 +138,6 @@ public class HandInput : MonoBehaviour
 
         if (string.IsNullOrEmpty(data) || data.Length < 2 || data[0] != '[') return false;
 
-        // Bỏ '[' và ']'
         string body = data.Substring(1, data.Length - 2);
         string[] parts = body.Split(',');
         if (parts.Length < HandPoints * 3) return false;
@@ -147,10 +146,8 @@ public class HandInput : MonoBehaviour
         if (!float.TryParse(parts[idx * 3], out float px)) return false;
         if (!float.TryParse(parts[idx * 3 + 1], out float py)) return false;
 
-        // Ưu tiên kích thước frame THẬT do Python gửi kèm (sau gesture: index 64, 65).
-        // Fallback về giá trị Inspector nếu payload cũ không có.
-        float w = cameraWidth > 0.0001f ? cameraWidth : 960f;
-        float h = cameraHeight > 0.0001f ? cameraHeight : 540f;
+        float w = cameraWidth > 0.0001f ? cameraWidth : 640;
+        float h = cameraHeight > 0.0001f ? cameraHeight : 480;
         int dimBase = HandPoints * 3 + 1; // bỏ qua gesture
         if (parts.Length >= dimBase + 2)
         {
