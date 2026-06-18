@@ -759,7 +759,6 @@ Transform:
   - {fileID: 1994919740}
   - {fileID: 38148813}
   - {fileID: 179477592}
-  - {fileID: 1936665908}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &260578474 stripped
@@ -2804,7 +2803,7 @@ MonoBehaviour:
   reachRange: {x: 30, y: 9}
   depthGain: 1
   fallbackFrameSize: {x: 960, y: 540}
-  enableHandPhysics: 1
+  enableHandPhysics: 0
   pointColliderRadius: 0.15
   ignoredGestures:
   - ThumbsUp
@@ -4701,7 +4700,7 @@ GameObject:
   - component: {fileID: 1650071524}
   - component: {fileID: 1650071525}
   m_Layer: 0
-  m_Name: HandCon1
+  m_Name: HandCon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5417,50 +5416,6 @@ MonoBehaviour:
   fillDuration: 3
   fillColor: {r: 0, g: 1, b: 0, a: 1}
   dropTolerance: 0.5
---- !u!1 &1936665907
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1936665908}
-  - component: {fileID: 1936665909}
-  m_Layer: 0
-  m_Name: HandColliderManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1936665908
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1936665907}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 217349468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1936665909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1936665907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28d5f82086719fe4a8d11f5bf5bac014, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandColliderRig
 --- !u!4 &1957741057 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4027323846526692467, guid: 3146473a1e53b924aa3aad3821cf8e63, type: 3}
@@ -5851,7 +5806,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UDPReceive
   port: 5026
   startRecieving: 1
-  printToConsole: 0
+  printToConsole: 1
   printGestureToConsole: 0
   data: 
   gesture: 

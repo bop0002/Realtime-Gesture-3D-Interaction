@@ -5,10 +5,10 @@ using UnityEngine;
 public class HandCon : MonoBehaviour
 {
     [Header("References")]
-    public GameObject sp1; // Wrist Point 0
-    public GameObject sp2; // Middle MCP Point 9
-    public GameObject upPoint; //Index MCP Point 5
-    public GameObject bone; // Root Bone
+    public GameObject sp1; 
+    public GameObject sp2; 
+    public GameObject upPoint; 
+    public GameObject bone; 
     
     [Header("Rotation")]
     public Vector3 rotationOffset = new Vector3(0, 0, 0); 
@@ -38,19 +38,13 @@ public class HandCon : MonoBehaviour
     {
         Vector3 origin = sp1.transform.position;
 
-        // Vẽ các Vector tính toán từ Landmark (Đường mảnh)
-        Debug.DrawRay(origin, (sp2.transform.position - sp1.transform.position), Color.white); // Cổ tay -> Ngón giữa
-        Debug.DrawRay(origin, (upPoint.transform.position - sp1.transform.position), Color.yellow); // Cổ tay -> Ngón trỏ
+        Debug.DrawRay(origin, (sp2.transform.position - sp1.transform.position), Color.white); 
+        Debug.DrawRay(origin, (upPoint.transform.position - sp1.transform.position), Color.yellow); 
 
-        // Vẽ hệ trục tọa độ thực tế của xương sau khi áp Rotation (Đường đậm)
-        // Trục Forward (Z) của xương
         Debug.DrawRay(origin, bone.transform.forward * 0.1f, Color.blue); 
-        // Trục Up (Y) của xương
         Debug.DrawRay(origin, bone.transform.up * 0.1f, Color.green);
-        // Trục Right (X) của xương - Đây là trục bạn cần nằm ngang để gập ngón
         Debug.DrawRay(origin, bone.transform.right * 0.1f, Color.red);
 
-        // Vẽ Palm Normal vừa tính được
         Debug.DrawRay(origin, currentPalmNormal * 0.15f, Color.cyan);
     }
 }

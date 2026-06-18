@@ -9,51 +9,36 @@ public class HandTracking : MonoBehaviour
     [SerializeField] private GameObject debugHand;
 
     [Header("World Scale")]
-    [Tooltip("Số chia tọa độ từ Python (pixel) sang world unit. Khi bật Reach Remap, trường này CHỈ còn quy định KÍCH THƯỚC bàn tay (offset mỗi điểm so với cổ tay), không còn ảnh hưởng tầm với. Càng nhỏ tay càng to.")]
     [SerializeField] private float coordinateDivisor = 45f;
 
-    [Header("Reach Remap (Gain)")]
-    [Tooltip("Tách tầm với khỏi kích thước tay: ánh xạ vị trí cổ tay (chuẩn hoá 0..1 theo khung hình) vào vùng world rộng reachRange quanh reachCenter. Cho tay với tới toàn playground mà không cần khua nhiều. Tắt để về hành vi map 1:1 cũ.")]
-    [SerializeField] private bool enableReachRemap = true;
-    [Tooltip("Tâm vùng với tới trong world (thường = tâm playground box). Camera ở giữa khung → điểm này.")]
+    [Header("Reach Remap (Gain)")]    [SerializeField] private bool enableReachRemap = true;
     [SerializeField] private Vector3 reachCenter = new Vector3(1f, 3.5f, 0f);
-    [Tooltip("Bề rộng vùng tay quét tới theo trục X (ngang) và Y (dọc). Mép khung hình → reachCenter ± range/2. Tăng = với xa hơn với cùng quãng tay vật lý (gain).")]
     [SerializeField] private Vector2 reachRange = new Vector2(30f, 9f);
-    [Tooltip("Hệ số khuếch đại chiều sâu (Z). Z của MediaPipe nhiễu & nhỏ nên depth vốn hạn chế; 1 = giữ scale cũ, tăng để đẩy forward/back rõ hơn.")]
     [SerializeField] private float depthGain = 1f;
-    [Tooltip("Kích thước khung hình camera (px) dùng để chuẩn hoá khi payload UDP không kèm W,H. Khớp cap.set ở Python (mặc định 960x540).")]
     [SerializeField] private Vector2 fallbackFrameSize = new Vector2(960f, 540f);
 
     [Header("Hand Physics")]
-    [Tooltip("Bật để auto-add SphereCollider + kinematic Rigidbody lên 21 Points và driver chúng qua MovePosition trong FixedUpdate (cho phép tay đẩy được vật lý).")]
     [SerializeField] private bool enableHandPhysics = true;
-    [Tooltip("Radius của SphereCollider trên mỗi Point. Tune theo coordinateDivisor — tay càng to (divisor nhỏ) thì collider có thể giảm xuống.")]
     [SerializeField] private float pointColliderRadius = 0.15f;
 
     [Header("Gesture Filter")]
-    [Tooltip("Các gesture cần bỏ qua hoàn toàn — khi Python gửi 1 gesture này, ModelGesture sẽ giữ nguyên giá trị trước đó (xem như không nhận gesture mới). Hữu ích khi model nhầm Close ↔ ThumbsUp/OK.")]
     [SerializeField] private string[] ignoredGestures = new[] { "ThumbsUp" };
 
     public enum GestureSource
     {
-        Model,        // chỉ dùng output từ TFLite model (như trước)
-        Rule,         // chỉ dùng rule-based đếm ngón từ Python
-        EitherMatch,  // ưu tiên Model; nếu Model = None thì lấy Rule
-        BothMatch,    // chỉ cho gesture khi Model == Rule (chống false-positive)
+        Model,        
+        Rule,         
+        EitherMatch,  
+        BothMatch,    
     }
 
     [Header("Gesture Source")]
-    [Tooltip("Chọn nguồn gesture dùng cho CurrentGesture. BothMatch an toàn nhất cho các action quan trọng (grab/throw). Model giữ hành vi cũ.")]
     [SerializeField] private GestureSource gestureSource = GestureSource.Model;
 
-    // Output từ TFLite model phía Python (đã qua ignoredGestures filter).
     public string ModelGesture { get; private set; } = "None";
-    // Output rule-based đếm ngón (Open / Close / Pointer / Peace) — None nếu Python không gửi.
     public string RuleGesture { get; private set; } = "None";
-    // Gesture cuối cùng theo gestureSource — các script khác (HandGrabber, GestureUIController) đọc trường này.
     public string CurrentGesture { get; private set; } = "None";
 
-    //[SerializeField] private GameObject handModel;
     private const int handPoints = 21;
     private (int startPoint,int endPoint)[] bones = new []
     {
@@ -64,17 +49,11 @@ public class HandTracking : MonoBehaviour
         (0,17),(13,17),(17,18),(18,19),(19,20) //5st finger
     };
 
-    // Target local position cho mỗi Point — set trong Update(), consume trong FixedUpdate().
-    // Tách 2 step vì kinematic Rigidbody cần MovePosition (FixedUpdate) thay vì set transform
-    // trực tiếp — set trực tiếp sẽ teleport rb, engine không sinh velocity → không đẩy được cube.
     private Vector3[] _targetLocalPositions;
     private Rigidbody[] _pointRigidbodies;
     private Collider[] _pointColliders;
     private bool _hasFreshTarget;
 
-    // Renderer của debug visuals (sphere Points + Lines). Tắt debug = tắt renderer này
-    // chứ KHÔNG SetActive(false) cả debugHand — nếu deactivate, Points (con của debugHand)
-    // ngừng simulate physics (MovePosition) → model đứng yên. Giữ active, chỉ ẩn renderer.
     private Renderer[] _debugRenderers;
     private bool _debugVisible;
     private bool _debugVisibleInit;
@@ -94,8 +73,6 @@ public class HandTracking : MonoBehaviour
 
         if (enableHandPhysics) SetupHandPhysics();
 
-        // debugHand phải luôn active vì Points (con của nó) cần active để simulate physics & drive model.
-        // Việc ẩn/hiện debug giờ làm qua Renderer.enabled, không phải SetActive.
         if (debugHand != null)
         {
             debugHand.SetActive(true);
@@ -104,10 +81,6 @@ public class HandTracking : MonoBehaviour
         ApplyDebugVisible(IsDebug);
     }
 
-    /// <summary>
-    /// Bật/tắt HIỂN THỊ debug (sphere + line) mà vẫn giữ debugHand active để Points tiếp tục
-    /// được drive (physics/transform) → model luôn hoạt động dù tắt debug. Chỉ chạy khi đổi trạng thái.
-    /// </summary>
     private void ApplyDebugVisible(bool on)
     {
         if (_debugVisibleInit && _debugVisible == on) return;
@@ -127,12 +100,6 @@ public class HandTracking : MonoBehaviour
         {
             if (Points[i] == null) continue;
             var go = Points[i].gameObject;
-
-            // QUAN TRỌNG: Rigidbody phải add TRƯỚC SphereCollider.
-            // Nếu collider add trước khi GO có Rigidbody, Unity register nó vào static
-            // collision tree và không tự promote sang dynamic khi rb được add sau đó →
-            // cube sleeping không bị wake bởi collider tay. Add rb trước đảm bảo collider
-            // sinh ra biết ngay là dynamic collider của rb này.
             var rb = go.GetComponent<Rigidbody>();
             if (rb == null) rb = go.AddComponent<Rigidbody>();
             rb.isKinematic = true;
@@ -148,15 +115,9 @@ public class HandTracking : MonoBehaviour
             _pointColliders[i] = col;
         }
 
-        // Flush pending transform/component changes vào physics scene ngay frame này,
-        // tránh trường hợp collider mới add nhưng physics chưa thấy đến tick sau.
         Physics.SyncTransforms();
     }
 
-    /// <summary>
-    /// Bật/tắt collider tay runtime — HandGrabber gọi để disable collider lúc đang nắm object
-    /// (tránh object đã grab + parent vào palmAnchor bị các collider tay khác đụng).
-    /// </summary>
     public void SetHandPhysicsEnabled(bool on)
     {
         if (_pointColliders == null) return;
@@ -176,10 +137,8 @@ public class HandTracking : MonoBehaviour
         data = data.Remove(data.Length-1,1);
         string[] points = data.Split(',');
 
-        var divisor = coordinateDivisor > 0.0001f ? coordinateDivisor : 100f;
+        var divisor = coordinateDivisor > 0.0001f ? coordinateDivisor : 45;
 
-        // Cổ tay (Point 0) là gốc: vị trí của nó quyết định tầm với (reach remap),
-        // còn các điểm khác chỉ là offset cố định theo divisor (giữ nguyên kích thước tay).
         float wristRawX = float.Parse(points[0]);
         float wristRawY = float.Parse(points[1]);
         float wristRawZ = float.Parse(points[2]);
@@ -187,7 +146,6 @@ public class HandTracking : MonoBehaviour
         Vector3 wristWorld;
         if (enableReachRemap)
         {
-            // W,H đi kèm payload ở index 64,65 (sau model_gesture@63). Không có thì dùng fallback.
             float frameW = fallbackFrameSize.x, frameH = fallbackFrameSize.y;
             if (points.Length > handPoints * 3 + 2)
             {
@@ -197,23 +155,20 @@ public class HandTracking : MonoBehaviour
                 if (ph > 1f) frameH = ph;
             }
 
-            // Chuẩn hoá 0..1 (Python đã flip Y nên ny=0 ở đáy, =1 ở đỉnh).
             float nx = wristRawX / frameW;
             float ny = wristRawY / frameH;
             wristWorld = new Vector3(
-                reachCenter.x + (0.5f - nx) * reachRange.x,   // (0.5-nx) giữ mirror X như công thức "7 - x" cũ
+                reachCenter.x + (0.5f - nx) * reachRange.x,   
                 reachCenter.y + (ny - 0.5f) * reachRange.y,
                 reachCenter.z + (wristRawZ / divisor) * depthGain);
         }
         else
         {
-            // Hành vi cũ: map 1:1 pixel/divisor, gốc world tại "7 - x".
             wristWorld = new Vector3(7f - wristRawX / divisor, wristRawY / divisor, wristRawZ / divisor);
         }
 
         for(int i = 0;i<handPoints;i++)
         {
-            // Offset mỗi điểm so với cổ tay (mirror X để khớp với hệ "7 - x"), chia divisor => kích thước tay cố định.
             var offset = new Vector3(
                 -(float.Parse(points[i*3])   - wristRawX) / divisor,
                  (float.Parse(points[i*3+1]) - wristRawY) / divisor,
@@ -235,13 +190,12 @@ public class HandTracking : MonoBehaviour
         _hasFreshTarget = enableHandPhysics;
 
 
-        // Parse model gesture (index 63) — backward compatible với payload cũ
         if (points.Length > handPoints * 3)
         {
             string gesture = points[handPoints * 3].Trim(' ', '\'', '"');
             if (!IsIgnoredGesture(gesture))
             {
-                ModelGesture = gesture; // chỉ update khi không nằm trong blacklist
+                ModelGesture = gesture;
             }
         }
         else
@@ -249,8 +203,6 @@ public class HandTracking : MonoBehaviour
             ModelGesture = "None";
         }
 
-        // Parse rule gesture (index 66 — sau model_gesture, width, height).
-        // Backward compatible: payload cũ không có thì RuleGesture = "None".
         int ruleIdx = handPoints * 3 + 3;
         if (points.Length > ruleIdx)
         {
@@ -263,7 +215,6 @@ public class HandTracking : MonoBehaviour
 
         CurrentGesture = ResolveCurrentGesture();
 
-        //HandleHandModel();
 
     }
 
@@ -276,8 +227,6 @@ public class HandTracking : MonoBehaviour
             var rb = _pointRigidbodies[i];
             if (rb == null || Points[i] == null) continue;
 
-            // Convert target localPosition → world. Parent có thể là HandTracking transform
-            // hoặc null (Points ở scene root) — handle cả 2.
             var parent = Points[i].parent;
             Vector3 worldTarget = parent != null
                 ? parent.TransformPoint(_targetLocalPositions[i])
@@ -314,11 +263,6 @@ public class HandTracking : MonoBehaviour
         }
     }
 
-
-    private void HandleHandModel()
-    {
-        //handModel.transform.position =  Points[0].transform.localPosition;
-    }
 
     private bool IsIgnoredGesture(string gesture)
     {

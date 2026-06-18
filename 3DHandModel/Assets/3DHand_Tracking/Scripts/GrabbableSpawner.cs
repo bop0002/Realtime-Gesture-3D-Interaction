@@ -36,7 +36,6 @@ public class GrabbableSpawner : MonoBehaviour
     [SerializeField] private float wallThickness = 0.3f;
     [SerializeField] private Color boxColor = new Color(0.35f, 0.35f, 0.4f);
 
-    // Đếm tăng dần để đặt tên object — giữ unique kể cả khi bấm spawn nhiều lần lúc đang chơi.
     private int spawnSerial;
 
     private void Start()
@@ -45,11 +44,6 @@ public class GrabbableSpawner : MonoBehaviour
         SpawnBatch();
     }
 
-    /// <summary>
-    /// Spawn 1 lượt: các entry thủ công + auto-fill cubes. Gọi được lúc đang Play
-    /// (qua nút Inspector hoặc context menu component) để spawn lại object trong game.
-    /// Mỗi lần bấm cộng dồn thêm 1 batch (không xoá object cũ).
-    /// </summary>
     [ContextMenu("Spawn Batch (Entries + AutoFill)")]
     public void SpawnBatch()
     {
@@ -117,27 +111,22 @@ public class GrabbableSpawner : MonoBehaviour
         float d = boxInnerSize.z;
         float t = wallThickness;
 
-        // Bottom (đáy)
         CreateWall(root.transform, "Bottom",
             localPos: new Vector3(0f, t * 0.5f, 0f),
             scale:    new Vector3(w + 2f * t, t, d + 2f * t));
 
-        // Front wall (+Z)
         CreateWall(root.transform, "Wall_Front",
             localPos: new Vector3(0f, t + h * 0.5f,  d * 0.5f + t * 0.5f),
             scale:    new Vector3(w + 2f * t, h, t));
 
-        // Back wall (-Z)
         CreateWall(root.transform, "Wall_Back",
             localPos: new Vector3(0f, t + h * 0.5f, -d * 0.5f - t * 0.5f),
             scale:    new Vector3(w + 2f * t, h, t));
 
-        // Left wall (-X)
         CreateWall(root.transform, "Wall_Left",
             localPos: new Vector3(-w * 0.5f - t * 0.5f, t + h * 0.5f, 0f),
             scale:    new Vector3(t, h, d));
 
-        // Right wall (+X)
         CreateWall(root.transform, "Wall_Right",
             localPos: new Vector3( w * 0.5f + t * 0.5f, t + h * 0.5f, 0f),
             scale:    new Vector3(t, h, d));

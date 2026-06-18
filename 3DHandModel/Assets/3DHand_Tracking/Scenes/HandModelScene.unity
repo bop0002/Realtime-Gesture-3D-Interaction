@@ -2725,11 +2725,19 @@ MonoBehaviour:
   - {fileID: 1957741058}
   - {fileID: 1204778259}
   - {fileID: 1633117049}
-  IsDebug: 0
+  IsDebug: 1
   debugHand: {fileID: 1023900716}
   coordinateDivisor: 50
+  enableReachRemap: 1
+  reachCenter: {x: 1, y: 3.5, z: 0}
+  reachRange: {x: 30, y: 9}
+  depthGain: 1
+  fallbackFrameSize: {x: 960, y: 540}
+  enableHandPhysics: 1
+  pointColliderRadius: 0.15
   ignoredGestures:
   - ThumbsUp
+  gestureSource: 0
 --- !u!4 &956551590
 Transform:
   m_ObjectHideFlags: 0
@@ -5837,7 +5845,9 @@ MonoBehaviour:
   port: 5026
   startRecieving: 1
   printToConsole: 1
+  printGestureToConsole: 0
   data: 
+  gesture: 
 --- !u!4 &2113126922
 Transform:
   m_ObjectHideFlags: 0
@@ -6031,7 +6041,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3265423238199530346, guid: 320df519703f99849a22ba0c64b70b01, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

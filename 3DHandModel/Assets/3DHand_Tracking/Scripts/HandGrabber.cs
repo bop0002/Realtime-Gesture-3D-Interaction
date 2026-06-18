@@ -5,45 +5,30 @@ public class HandGrabber : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private HandTracking handTracking;
-    [Tooltip("5 palm landmarks (Point 0, 5, 9, 13, 17). Dùng để tính anchor + rotation, ổn định khi nắm tay.")]
     [SerializeField] private Transform[] palmPoints = new Transform[5];
-    [Tooltip("Index trong palmPoints trỏ vào Point 0 (wrist) — dùng để tính rotation. Mặc định 0.")]
     [SerializeField] private int wristIndex = 0;
-    [Tooltip("Index trong palmPoints trỏ vào Point 5 (index MCP) — dùng để tính palm normal. Mặc định 1.")]
     [SerializeField] private int indexMcpIndex = 1;
-    [Tooltip("Index trong palmPoints trỏ vào Point 9 (middle MCP) — dùng để tính rotation. Mặc định 2.")]
     [SerializeField] private int middleMcpIndex = 2;
 
     [Header("Detection Points")]
-    [Tooltip("Các điểm tham gia tính vùng detect grab (OverlapSphere tại mỗi điểm). Để trống thì tự động dùng tất cả 21 landmark từ HandTracking.Points.")]
     [SerializeField] private Transform[] detectionPoints;
 
     [Header("Anchor Override (for model alignment)")]
-    [Tooltip("Nếu set, palmAnchor sẽ follow Transform này thay vì centroid 5 palm points. Kéo bone của model (HandCon.bone) hoặc một empty child trên model vào đây để object cầm khớp với visual hand model.")]
     [SerializeField] private Transform palmAnchorOverride;
-    [Tooltip("Offset vị trí (local theo override transform) — thường dùng để dịch từ wrist bone vào tâm lòng tay. Local +y thường là hướng ngón.")]
     [SerializeField] private Vector3 anchorPositionOffset = Vector3.zero;
-    [Tooltip("Offset rotation (euler, local theo override transform)")]
     [SerializeField] private Vector3 anchorRotationOffset = Vector3.zero;
 
     [Header("Grab Settings")]
-    [Tooltip("Tên gesture từ Python để kích hoạt grab")]
     [SerializeField] private string grabGesture = "Close";
-    [Tooltip("Bán kính trigger quanh mỗi detection point. Union các vùng = vùng bao bàn tay.")]
     [SerializeField] private float pointRadius = 0.35f;
-    [Tooltip("Layer chứa các Grabbable. Để Everything nếu chưa cấu hình layer.")]
     [SerializeField] private LayerMask grabbableMask = ~0;
 
     [Header("Debounce")]
-    [Tooltip("Phải giữ gesture grab liên tục bao lâu (giây) trước khi grab thực sự")]
     [SerializeField] private float grabHoldTime = 0.15f;
-    [Tooltip("Phải rời gesture grab liên tục bao lâu (giây) trước khi release. Tăng giá trị này để chống misclassification (ThumbsUp/OK/...) khi đang nắm.")]
     [SerializeField] private float releaseHoldTime = 0.5f;
 
     [Header("Throw")]
-    [Tooltip("Số frame gần nhất dùng để tính velocity lúc release.")]
     [SerializeField, Range(2, 30)] private int velocitySampleCount = 10;
-    [Tooltip("Hệ số nhân velocity khi throw. 1.0 = đúng tốc độ tay; >1 ném mạnh hơn; <1 nhẹ hơn.")]
     [SerializeField, Range(0f, 5f)] private float throwMultiplier = 1.0f;
 
     [Header("Debug")]
@@ -98,7 +83,6 @@ public class HandGrabber : MonoBehaviour
             }
             else
             {
-                // Enforce object luôn ở centroid + rotation đồng bộ với palm
                 currentGrab.transform.localPosition = Vector3.zero;
                 currentGrab.transform.localRotation = Quaternion.identity;
             }
@@ -173,7 +157,6 @@ public class HandGrabber : MonoBehaviour
                 var g = hits[i].GetComponentInParent<Grabbable>();
                 if (g == null || g.IsGrabbed) continue;
 
-                // Tự động đánh thức Rigidbody đang ngủ để va chạm vật lý với xương tay (kinematic) hoạt động ngay lập tức
                 var targetRb = g.GetComponent<Rigidbody>();
                 if (targetRb != null && targetRb.IsSleeping())
                 {
@@ -207,8 +190,6 @@ public class HandGrabber : MonoBehaviour
         HighlightOnly(null);
         grabHeldFor = 0f;
         releaseHeldFor = 0f;
-        // Object đã grab parent vào palmAnchor — nếu collider tay vẫn bật, các Point khác
-        // có thể đụng vào object đang cầm và đẩy nó lệch khỏi anchor.
         if (handTracking != null) handTracking.SetHandPhysicsEnabled(false);
     }
 
